@@ -9,6 +9,7 @@ import { DiEActor, DiEItem } from "./module/documents.mjs";
 import { HerosSheet, DieuSheet, PnjSheet } from "./module/sheets.mjs";
 import { EquipementSheet, HistoriqueSheet, BenedictionSheet, PouvoirSheet, MaledictionSheet } from "./module/item-sheets.mjs";
 import { migrerMonde } from "./module/migration.mjs";
+import { enregistrerReglagesCarte, carteAuLancement, boutonCarte } from "./module/carte.mjs";
 import { rollInitiative, bindCombatButton, _interventionDivine } from "./module/combat.mjs";
 import { initRelais } from "./module/relais.mjs";
 
@@ -93,6 +94,9 @@ Hooks.once("init", () => {
   ItemsCollection.registerSheet("dieux-ennemis-nonofficiel", PouvoirSheet, {
     types: ["pouvoir"], makeDefault: true, label: "Fiche Pouvoir Divin"
   });
+
+  // Carte du monde (image, ouverture au lancement)
+  enregistrerReglagesCarte();
 
   // Noms des dieux personnalisables (Configuration → Paramètres du système)
   for (const g of GODS) {
@@ -328,6 +332,7 @@ Hooks.once("setup", () => {
 Hooks.once("ready", () => {
   initRelais();
   migrerMonde();
+  carteAuLancement();
   if (game.user.isGM) {
     setTimeout(() => ouvrirWiki(), 800);
   }
@@ -348,6 +353,7 @@ function _injecterBoutonWiki() {
   btn.style.cssText = "width:100%;margin:4px 0 6px;padding:4px 8px;font-size:12px;cursor:pointer;";
   btn.addEventListener("click", () => ouvrirWiki());
   panel.closest("section, .directory, #journal")?.prepend(btn) ?? panel.before(btn);
+  boutonCarte(btn.parentElement);
 }
 
 // Déclencher sur le hook classique ET sur changement d'onglet sidebar
@@ -363,6 +369,7 @@ Hooks.on("renderJournalDirectory", (app, html) => {
   const header = root.querySelector(".directory-header") ?? root.querySelector("header") ?? root;
   if (header === root) root.prepend(btn);
   else header.after(btn);
+  boutonCarte(root);
 });
 
 Hooks.on("changeSidebarTab", (tab) => {
