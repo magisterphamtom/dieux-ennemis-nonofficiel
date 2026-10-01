@@ -130,7 +130,7 @@
               </div>
               {{#each inspirations as |ins|}}
               <div class="de-inspiration-ligne" title="S'ajoute automatiquement au prochain jet">
-                ✦ Inspiration de {{ins.dieuNom}} : +{{ins.des}}
+                ✦ {{#if ins.libelle}}{{ins.libelle}}{{else}}Inspiration de {{ins.dieuNom}}{{/if}} : +{{ins.des}}
               </div>
               {{/each}}
               {{#if inspirations.length}}<a class="de-inspiration-clear de-btn-sm" title="Retirer les inspirations en attente">✕ retirer</a>{{/if}}
@@ -251,9 +251,12 @@
     ═══════════════════════════════════════════════ --}}
     <section class="sheet-tab tab" data-tab="devotions">
 
-      <div style="text-align:center;margin-bottom:10px;">
-        <button class="de-btn btn-roll-dialog">
-          <i class="fas fa-dice-d6"></i> Lancer des dés
+      <div class="de-dev-actions">
+        <button type="button" class="de-btn-action roll-devotion" data-god="champs-de-bataille">
+          <i class="fas fa-dice-d6"></i> Prendre un risque
+        </button>
+        <button type="button" class="de-btn-action btn-fin-scenario" title="Répartir les 2 points d'expérience de fin de scénario">
+          <i class="fas fa-graduation-cap"></i> Fin de scénario
         </button>
       </div>
 
@@ -266,12 +269,12 @@
                 <th>Dieu</th>
                 <th>Domaine</th>
                 <th style="width:52px;">Dés</th>
-                <th style="width:60px;">Difficulté</th>
+                <th style="width:96px;" title="Expérience accumulée / 3 × Dévotion">Expérience</th>
                 <th style="width:70px;">Lancer</th>
               </tr>
             </thead>
             <tbody>
-              {{#each gods as |god|}}
+              {{#each godsRows as |god|}}
               <tr>
                 <td class="de-god-name">{{god.name}}</td>
                 <td class="de-god-domain">{{god.domaine}}</td>
@@ -281,12 +284,9 @@
                     value="{{lookup ../system.devotions god.id}}"
                     min="0" max="10"/>
                 </td>
-                <td style="text-align:center;">
-                  {{#ifEq god.id "champs-de-bataille"}}
-                    <span class="de-seuil-inline">⚠ {{../seuilDefaite}}</span>
-                  {{else}}
-                    <span style="color:var(--de-ink-brown);font-size:11px;">—</span>
-                  {{/ifEq}}
+                <td class="de-xp-cell">
+                  <input class="de-xp-val" type="number" name="system.xpDevotions.{{god.id}}" value="{{god.xp}}" min="0"/>
+                  <span class="de-xp-seuil">/ {{god.seuilXp}}</span>
                 </td>
                 <td>
                   <button type="button" class="de-roll-btn roll-devotion" data-god="{{god.id}}"

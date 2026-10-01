@@ -7,23 +7,39 @@ import { majActeur } from "./relais.mjs";
 
 const FLAG = "dieux-ennemis-nonofficiel";
 
+/**
+ * Une faveur « pour ce round » (intervention de combat) porte {combat, round} : elle reste active
+ * pendant tout le round du combat en cours. Sans combat lancé, elle sert une seule fois.
+ */
+export function pourCeRound() {
+  const c = game.combat;
+  return c?.started ? { combat: c.id, round: c.round } : { combat: null, round: null };
+}
+function estDeRound(e) { return e?.combat != null && e?.round != null; }
+function estActive(e) {
+  if (!estDeRound(e)) return true;
+  const c = game.combat;
+  return !!c && c.id === e.combat && c.round === e.round;
+}
+
 /** HTML des cases à cocher. `domaineFixe` : domaine imposé (attaque), sinon suit la source choisie. */
 export function blocDivin(actor, domaineFixe = null) {
   const insp = actor.getFlag?.(FLAG, "inspiration") ?? [];
+  const inspActives = insp.filter(estActive);
   const mal  = (actor.items ?? [])
     .filter(i => i.type === "malediction" && i.system.force > 0 && i.system.malusDes > 0
               && (!domaineFixe || i.system.dieuSource === domaineFixe));
-  if (!insp.length && !mal.length) return "";
+  if (!inspActives.length && !mal.length) return "";
   return `
   <div class="de-atk-section de-bloc-divin">
     <div class="de-atk-label"><i class="fas fa-star"></i> Faveurs et malédictions</div>
     <div class="de-atk-checklist">
-      ${insp.map((i, idx) => `
+      ${insp.map((i, idx) => estActive(i) ? `
       <label class="de-atk-check">
         <input type="checkbox" name="insp" value="${idx}" data-bonus="${i.des}" checked>
-        <span>Inspiration de ${i.dieuNom}</span>
+        <span>${i.libelle ?? `Inspiration de ${i.dieuNom}`}${estDeRound(i) ? " <small>(ce round)</small>" : ""}</span>
         <span class="de-atk-check-bonus">+${i.des}</span>
-      </label>`).join("")}
+      </label>` : "").join("")}
       ${mal.map(m => `
       <label class="de-atk-check de-atk-check-malus" data-domaine="${m.system.dieuSource}">
         <input type="checkbox" name="maled" data-malus="${m.system.malusDes}" checked>
@@ -55,7 +71,29 @@ export function lireDivin(root) {
 
 /** Retire les inspirations utilisées. */
 export async function consommerInspirations(actor, idxs) {
-  if (!idxs?.length) return;
-  const reste = (actor.getFlag(FLAG, "inspiration") ?? []).filter((_, i) => !idxs.includes(i));
-  await majActeur(actor, { [`flags.${FLAG}.inspiration`]: reste });
+  idxs = idxs ?? [];
+  const avant = actor.getFlag(FLAG, "inspiration") ?? [];
+  // Les faveurs « pour ce round » restent tant que le round dure ; les expirées sont nettoyées.
+  const reste = avant.filter((e, i) => estActive(e) && (estDeRound(e) || !idxs.includes(i)));
+  if (reste.length !== avant.length) await majActeur(actor, { [`flags.${FLAG}.inspiration`]: reste });
+}
+
+// ── Protection du défenseur (intervention de la déesse du Foyer) ──
+/** Bonus de difficulté actif contre ce défenseur (0 si aucun). */
+export function protectionActive(actor) {
+  const p = actor?.getFlag?.(FLAG, "protection");
+  return p && estActive(p) ? p : null;
+}
+export async function poserProtection(actor, donnees) {
+  await majActeur(actor, { [`flags.${FLAG}.protection`]: { ...donnees, ...pourCeRound() } });
+}
+/** Après une attaque : retire une protection à usage unique (hors combat) ou expirée. */
+export async function consommerProtection(actor) {
+  const p = actor?.getFlag?.(FLAG, "protection");
+  if (p && (!estDeRound(p) || !estActive(p))) await majActeur(actor, { [`flags.${FLAG}.-=protection`]: null });
+}
+/** Ajoute une faveur de dés « pour ce round » (intervention du dieu des Champs de bataille). */
+export async function poserFaveurRound(actor, faveur) {
+  const liste = (actor.getFlag(FLAG, "inspiration") ?? []).filter(estActive);
+  await majActeur(actor, { [`flags.${FLAG}.inspiration`]: [...liste, { ...faveur, ...pourCeRound() }] });
 }

@@ -2838,3 +2838,17 @@
   cursor: pointer;
 }
 .de-section-title .de-btn-sm:hover { background: rgba(245, 200, 66, .15) !important; }
+
+/* ══ Expérience (0.3.3) ══════════════════════════════════════ */
+.de-dev-actions { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+.de-xp-cell { text-align: center; white-space: nowrap; }
+.de-xp-val { width: 40px !important; text-align: center; font-weight: 700; }
+.de-xp-seuil { font-size: 11px; color: var(--de-ink-brown, #5c3a1e); margin-left: 2px; }
+.dieux-ennemis.sheet.dieu .de-divin-scenario.de-divin-fin {
+  background: linear-gradient(160deg, #1a0a2e 0%, #3a1a5e 100%); border-color: #9b59b6;
+}
+.dieux-ennemis.sheet.dieu .de-divin-scenario.de-divin-fin i,
+.dieux-ennemis.sheet.dieu .de-divin-scenario.de-divin-fin small { color: #d9b8f0; border-color: rgba(217,184,240,.5); }
+.de-chat-xp { margin: 4px 12px 8px; padding-left: 16px; font-size: 13px; }
+.de-xp-select { width: 100% !important; height: auto !important; min-height: 34px; }
+.de-divin .de-atk-row:has(.de-xp-select) { flex-direction: column; align-items: stretch; gap: 4px; }

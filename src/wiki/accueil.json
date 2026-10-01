@@ -1,18 +1,18 @@
 {
- "_id": "fkrlp53C8kH9QwE4",
- "_key": "!journal!fkrlp53C8kH9QwE4",
+ "_id": "Cx7loEcw6R16UjTf",
+ "_key": "!journal!Cx7loEcw6R16UjTf",
  "name": "📖 Bienvenue",
  "sort": 10,
  "pages": [
   {
-   "_id": "uVnbhPYE9WN0rbbO",
-   "_key": "!journal.pages!fkrlp53C8kH9QwE4.uVnbhPYE9WN0rbbO",
+   "_id": "uY0srnwJo2Z91f6a",
+   "_key": "!journal.pages!Cx7loEcw6R16UjTf.uY0srnwJo2Z91f6a",
    "name": "À lire d'abord",
    "type": "text",
    "sort": 10,
    "text": {
     "format": 1,
-    "content": "<p>Ce système permet de jouer à <em>Dieux Ennemis</em> sur Foundry VTT. C'est une <strong>création de fan, non officielle</strong>, ni affiliée ni approuvée par Les XII Singes ou l'auteur du jeu.</p><h4>Ce qu'il contient</h4><ul><li>Les fiches de héros, de dieux, de premiers rôles et de figurants.</li><li>Les fenêtres de jet (risques, attaque, initiative) et les cartes de chat.</li><li>Le panneau d'actions des dieux (scénario, inspiration, miracle, malédiction, soins…).</li><li>Le suivi des bénédictions, malédictions et inspirations sur les fiches.</li></ul><h4>Ce qu'il ne contient pas</h4><p>Aucun texte, règle détaillée, illustration ni élément d'univers des livres. <strong>Il faut posséder le jeu</strong> pour y jouer : les règles, les bénédictions, l'équipement et le Monde se trouvent dans les livres édités par <a href=\"https://www.les12singes.com\">Les XII Singes</a>.</p><h4>Premier réglage</h4><p>Les dieux portent des noms génériques (Le Guerrier, L'Artisan…). Donnez-leur les noms de votre livre dans <strong>Configuration → Paramètres du jeu → Paramètres du système</strong>.</p><p>Le guide <span class=\"de-wiki-link\" data-wiki-id=\"hUMEqc9McdoqCmxx\">🎲 Jouer avec Foundry</span> explique chaque fenêtre et chaque bouton.</p>"
+    "content": "<p>Ce système permet de jouer à <em>Dieux Ennemis</em> sur Foundry VTT. C'est une <strong>création de fan, non officielle</strong>, ni affiliée ni approuvée par Les XII Singes ou l'auteur du jeu.</p><h4>Ce qu'il contient</h4><ul><li>Les fiches de héros, de dieux, de premiers rôles et de figurants.</li><li>Les fenêtres de jet (risques, attaque, initiative) et les cartes de chat.</li><li>Le panneau d'actions des dieux (scénario, inspiration, miracle, malédiction, soins…).</li><li>Le suivi des bénédictions, malédictions et inspirations sur les fiches.</li></ul><h4>Ce qu'il ne contient pas</h4><p>Aucun texte, règle détaillée, illustration ni élément d'univers des livres. <strong>Il faut posséder le jeu</strong> pour y jouer : les règles, les bénédictions, l'équipement et le Monde se trouvent dans les livres édités par <a href=\"https://www.les12singes.com\">Les XII Singes</a>.</p><h4>Premier réglage</h4><p>Les dieux portent des noms génériques (Le Guerrier, L'Artisan…). Donnez-leur les noms de votre livre dans <strong>Configuration → Paramètres du jeu → Paramètres du système</strong>.</p><p>Le guide <span class=\"de-wiki-link\" data-wiki-id=\"C48Isj3Zgng0pg5a\">🎲 Jouer avec Foundry</span> explique chaque fenêtre et chaque bouton.</p>"
    }
   }
  ]

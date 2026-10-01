@@ -6,6 +6,7 @@ import { rollRisque } from "./risque.mjs";
 import { ACTIONS_DIVINES } from "./dieu-actions.mjs";
 import { majActeur } from "./relais.mjs";
 import { invoquerBenediction, limiteBenedictions, usagesBenedictions } from "./benedictions.mjs";
+import { finDeScenarioHeros } from "./experience.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 }              = foundry.applications.sheets;
@@ -83,6 +84,10 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     // Bénédictions (limite d'usage par dieu et par scénario) et malédictions
     const gods = CONFIG.DIEUX?.gods ?? [];
+    ctx.godsRows = gods.map(g => {
+      const dev = Number(this.actor.system.devotions?.[g.id] ?? 0);
+      return { ...g, xp: Number(this.actor.system.xpDevotions?.[g.id] ?? 0), seuilXp: 3 * Math.max(1, dev) };
+    });
     const tousDieux = [...gods, ...(CONFIG.DIEUX?.dechus ?? [])];
     const nomDe = id => tousDieux.find(g => g.id === id)?.name ?? "Dieu inconnu";
     ctx.benedictionsVue = this.actor.items.filter(i => i.type === "benediction").map(b => {
@@ -122,7 +127,7 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (!this.isEditable) return;
 
     // ── Bouton attaque ─────────────────────────────────────────
-    el.querySelectorAll(".btn-roll-attaque, .btn-roll-dialog").forEach(btn => {
+    el.querySelectorAll(".btn-roll-attaque").forEach(btn => {
       btn.addEventListener("click", () => rollAttaque(this.actor));
     });
 
@@ -145,6 +150,11 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         ev.preventDefault();
         rollRisque(this.actor, "hubris");
       });
+    });
+
+    // ── Fin de scénario : 2 points d'expérience ───────────────
+    el.querySelectorAll(".btn-fin-scenario").forEach(btn => {
+      btn.addEventListener("click", ev => { ev.preventDefault(); finDeScenarioHeros(this.actor); });
     });
 
     // ── Bénédictions : invoquer ───────────────────────────────

@@ -26,6 +26,10 @@ export class HerosDataModel extends foundry.abstract.TypeDataModel {
       faiblesseHeroique: new StringField({ initial: "", label: "Faiblesse Héroïque" }),
       // Dévotions
       devotions: new SchemaField(devotionsSchema()),
+      // Expérience accumulée par Dévotion (Livret des héros p. 14)
+      xpDevotions: new SchemaField(Object.fromEntries(
+        ["champs-de-bataille", "artisanat", "fortune", "foyer", "justice", "amour", "sagesse"]
+          .map(g => [g, new NumberField({ integer: true, min: 0, initial: 0 })]))),
       // Blessures
       blessures: new SchemaField({
         value: new NumberField({ integer: true, min: 0, max: 10, initial: 0 }),

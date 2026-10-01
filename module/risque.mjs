@@ -106,6 +106,13 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
     <div class="de-rq-warn" hidden>
       ⚠ Les dieux abhorrent l'Hubris : chacun peut tenter une malédiction contre le héros.
     </div>
+  <div class="de-atk-row de-rq-accordes">
+    <div class="de-atk-label">
+      <i class="fas fa-hand-holding"></i> Dés accordés par le dieu
+      <span class="de-atk-hint">(vide = tous)</span>
+    </div>
+    <input type="number" name="accordes" min="0" max="20" placeholder="tous">
+  </div>
   </div>
 
   ${historiques.length > 0 ? `
@@ -149,7 +156,11 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
     const isHub   = src === "hubris";
     const brut    = Number(sel.selectedOptions[0]?.dataset.des) || 0;
     const hors    = !isHub && root.querySelector("[name=horsDomaine]")?.checked;
-    const base    = hors ? Math.floor(brut / 2) : brut;
+    const maxBase = hors ? Math.floor(brut / 2) : brut;
+    // Le joueur du dieu peut accorder moins de dés que la Dévotion (Livret des héros p. 17)
+    const accRaw  = isHub ? "" : (root.querySelector("[name=accordes]")?.value ?? "").trim();
+    const base    = accRaw === "" ? maxBase : Math.min(maxBase, Math.max(0, Number(accRaw) || 0));
+    const limite  = base < maxBase;
     const histEl  = root.querySelector("[name=historiqueId]:checked");
     const hist    = Number(histEl?.dataset.bonus) || 0;
     const desav   = Math.max(0, Number(root.querySelector("[name=desAvantages]")?.value) || 0);
@@ -157,7 +168,7 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
     const malus   = Number(root.querySelector("[name=useMalus]:checked")?.dataset.malus) || 0;
     filtrerMaledictions(root, src);
     const div     = lireDivin(root);
-    return { src, isHub, brut, hors, base, hist, histId: histEl?.value ?? "", desav, diff, malus,
+    return { src, isHub, brut, hors, maxBase, limite, base, hist, histId: histEl?.value ?? "", desav, diff, malus,
              insp: div.plus, maled: div.moins, inspIdx: div.inspIdx,
              total: Math.max(0, base + hist + desav + div.plus - malus - div.moins) };
   };
@@ -177,13 +188,15 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
         root.querySelector(".de-atk-desav-val").textContent = p.desav;
         root.querySelector(".de-atk-pool-val").textContent  = p.total;
         const parts = [`${p.base}`];
-        if (p.hors)  parts[0] = `${p.brut}÷2=${p.base}`;
+        if (p.hors)  parts[0] = `${p.brut}÷2=${p.maxBase}`;
+        if (p.limite) parts[0] = `${p.base}/${p.maxBase} accordés`;
         if (p.hist)  parts.push(`+${p.hist} hist.`);
         if (p.desav) parts.push(`+${p.desav} dés-av.`);
         if (p.insp)  parts.push(`+${p.insp} inspir.`);
         if (p.malus) parts.push(`−${p.malus} armure`);
         if (p.maled) parts.push(`−${p.maled} malédiction`);
-        root.querySelector(".de-atk-pool-detail").textContent = parts.length > 1 || p.hors ? parts.join(" ") : "";
+        root.querySelector(".de-atk-pool-detail").textContent = parts.length > 1 || p.hors || p.limite ? parts.join(" ") : "";
+        root.querySelector(".de-rq-accordes").hidden = p.isHub;
         root.querySelector(".de-rq-hors").hidden = p.isHub;
         root.querySelector(".de-rq-warn").hidden = !p.isHub;
       };
@@ -223,7 +236,7 @@ async function _resoudreRisque(actor, p) {
   // Détail du pool
   const detail = [p.isHub
     ? `Hubris ${p.base}`
-    : `${god?.name ?? p.src} ${p.hors ? `${p.brut}÷2=${p.base} (hors domaine)` : p.base}`];
+    : `${god?.name ?? p.src} ${p.hors ? `${p.brut}÷2=${p.maxBase} (hors domaine)` : p.maxBase}${p.limite ? ` → ${p.base} accordé${p.base > 1 ? "s" : ""}` : ""}`];
   if (p.hist)  detail.push(`+${p.hist} ${hist?.name ?? "historique"}`);
   if (p.desav) detail.push(`+${p.desav} dés-avantages`);
   if (p.insp)  detail.push(`+${p.insp} inspiration divine`);

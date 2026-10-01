@@ -4,6 +4,7 @@
 // ============================================================
 import { majActeur, creerItems } from "./relais.mjs";
 import { reinitialiserUsages, iconeMalediction } from "./benedictions.mjs";
+import { finDeScenarioDieu } from "./experience.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const FLAG = "dieux-ennemis-nonofficiel";
@@ -375,4 +376,4 @@ export async function ceremonie(dieu) {
      <div class="de-chat-detail">${res.actor.name} est épuisé par la nuit de rites.</div>`);
 }
 
-export const ACTIONS_DIVINES = { nouveauScenario, autorite, inspirer, miracle, maudire, soigner, ceremonie };
+export const ACTIONS_DIVINES = { finScenario: finDeScenarioDieu, nouveauScenario, autorite, inspirer, miracle, maudire, soigner, ceremonie };

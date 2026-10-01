@@ -4,7 +4,7 @@
 
 const { DialogV2 }           = foundry.applications.api;
 import { estAcolyte, appliquerAcolyte, desHtml, acolyteHtml } from "./acolyte.mjs";
-import { blocDivin, lireDivin, consommerInspirations } from "./bonus-divins.mjs";
+import { blocDivin, lireDivin, consommerInspirations, protectionActive, consommerProtection, poserProtection, poserFaveurRound } from "./bonus-divins.mjs";
 import { majActeur } from "./relais.mjs";
 const { renderTemplate }     = foundry.applications.handlebars;
 
@@ -234,6 +234,14 @@ async function rollAttaque(attaquant) {
     </div>
   </div>
 
+  <div class="de-atk-row">
+    <div class="de-atk-label">
+      <i class="fas fa-hand-holding"></i> Dés de Dévotion accordés par le dieu
+      <span class="de-atk-hint">(vide = tous)</span>
+    </div>
+    <input type="number" name="accordes" min="0" max="20" placeholder="tous">
+  </div>
+
   ${blocDivin(attaquant, "champs-de-bataille")}
 
   ${malus > 0 ? `
@@ -262,7 +270,9 @@ async function rollAttaque(attaquant) {
       const root = (dialogOrHtml?.element ?? dialogOrHtml)?.querySelector?.(".de-atk");
       if (!root) return;
       const majPool = () => {
-        const devoV = Number(root.dataset.devo) || 0;
+        const devoMax = Number(root.dataset.devo) || 0;
+        const acc   = (root.querySelector("[name=accordes]")?.value ?? "").trim();
+        const devoV = acc === "" ? devoMax : Math.min(devoMax, Math.max(0, Number(acc) || 0));
         const hist  = Number(root.querySelector("[name=historiqueId]:checked")?.dataset.bonus) || 0;
         const desav = [...root.querySelectorAll("[name=useEquip]:checked, [name=useAcquis]:checked")]
           .reduce((t, c) => t + (Number(c.dataset.bonus) || 0), 0)
@@ -271,13 +281,13 @@ async function rollAttaque(attaquant) {
         const div   = lireDivin(root);
         root.querySelector(".de-atk-desav-val").textContent = desav;
         root.querySelector(".de-atk-pool-val").textContent = Math.max(1, devoV + hist + desav + div.plus - mal - div.moins);
-        const parts = [`${devoV}`];
+        const parts = [devoV < devoMax ? `${devoV}/${devoMax} accordés` : `${devoV}`];
         if (hist)  parts.push(`+${hist} hist.`);
         if (desav) parts.push(`+${desav} dés-av.`);
         if (div.plus)  parts.push(`+${div.plus} inspir.`);
         if (mal)   parts.push(`−${mal} armure`);
         if (div.moins) parts.push(`−${div.moins} malédiction`);
-        root.querySelector(".de-atk-pool-detail").textContent = parts.length > 1 ? parts.join(" ") : "";
+        root.querySelector(".de-atk-pool-detail").textContent = parts.length > 1 || devoV < devoMax ? parts.join(" ") : "";
       };
       root.addEventListener("input", majPool);
       root.addEventListener("change", majPool);
@@ -293,6 +303,7 @@ async function rollAttaque(attaquant) {
           useEquip:     form.querySelector("[name=useEquip]")?.checked ?? false,
           useAcquis:    form.querySelector("[name=useAcquis]")?.checked ?? false,
           desSituation: Number(form.querySelector("[name=desSituation]")?.value) || 0,
+          accordes:     (form.querySelector("[name=accordes]")?.value ?? "").trim(),
           useMalus:     form.querySelector("[name=useMalus]")?.checked ?? false,
           divin:        lireDivin(form)
         };
@@ -315,7 +326,9 @@ async function _resoudreAttaque(attaquant, opts) {
   const cible = cibleId ? game.actors.get(cibleId) : null;
 
   // Pool : Dévotion + 1 historique + dés-avantages (tout s'ADDITIONNE)
-  const devo = devoCombat(attaquant);
+  const devoMax = devoCombat(attaquant);
+  // Le joueur du dieu des Champs de bataille peut accorder moins de dés que la Dévotion
+  const devo = (opts.accordes ?? "") === "" ? devoMax : Math.min(devoMax, Math.max(0, Number(opts.accordes) || 0));
   const hist = historiqueId ? attaquant.items.get(historiqueId) : null;
   const desHist  = hist ? Number(hist.system?.valeur ?? 1) : 0;
   const desEquip = useEquip  ? desAvEquipement(attaquant) : 0;
@@ -325,7 +338,7 @@ async function _resoudreAttaque(attaquant, opts) {
 
   const totalDes = Math.max(1, devo + desHist + desEquip + desAcq + desSit + divin.plus - malus - divin.moins);
 
-  const detailPool = [`Dévotion ${devo}`];
+  const detailPool = [devo < devoMax ? `Dévotion ${devo}/${devoMax} accordés` : `Dévotion ${devo}`];
   if (desHist)  detailPool.push(`+${desHist} ${hist.name}`);
   if (desEquip) detailPool.push(`+${desEquip} équipement`);
   if (desAcq)   detailPool.push(`+${desAcq} acquis`);
@@ -335,6 +348,7 @@ async function _resoudreAttaque(attaquant, opts) {
   if (divin.moins) detailPool.push(`−${divin.moins} malédiction`);
 
   // Difficulté selon le type de cible
+  let protectionTxt = "";
   let difficulte = 0;
   let typeCombat = "libre";
   let seuil = 0;
@@ -345,6 +359,9 @@ async function _resoudreAttaque(attaquant, opts) {
     } else {
       // Premier rôle ou héros : difficulté = Dévotion CdB + avantages défensifs
       difficulte = devoCombat(cible) + avantagesDefensifs(cible);
+      // Protection divine du défenseur (déesse du Foyer) pour ce round
+      const prot = protectionActive(cible);
+      if (prot) { difficulte += Number(prot.bonus) || 0; protectionTxt = `+${prot.bonus} protection de ${prot.dieuNom}`; }
       seuil      = devoCombat(cible) + 5;   // Livret des héros p. 24
       typeCombat = "opposition";
     }
@@ -357,6 +374,7 @@ async function _resoudreAttaque(attaquant, opts) {
   // Acolyte du dieu des Champs de bataille (Dévotion Champs de bataille ≥ 4) : relance d'un échec
   const aco = await appliquerAcolyte(roll, estAcolyte(attaquant, "champs-de-bataille"));
   await consommerInspirations(attaquant, divin.inspIdx);
+  if (cible) await consommerProtection(cible);
   const successes = aco.succes;
   const reussite  = typeCombat === "figurant" ? successes >= 1 : successes >= difficulte;
   const defaite   = typeCombat === "opposition" && successes >= seuil;
@@ -405,7 +423,7 @@ async function _resoudreAttaque(attaquant, opts) {
   <div class="de-chat-info">
     <span>Pool : <strong>${totalDes} dé${totalDes > 1 ? "s" : ""}</strong></span>
     ${cible ? `<span>→ <strong>${nomCible}</strong></span>` : ""}
-    ${difficulte > 0 ? `<span>Diff. : <strong>${difficulte}</strong></span>` : ""}
+    ${difficulte > 0 ? `<span>Diff. : <strong>${difficulte}</strong>${protectionTxt ? ` <small>(${protectionTxt})</small>` : ""}</span>` : ""}
     <span>Succès : <strong>${successes}</strong></span>
   </div>
   <div class="de-chat-detail">${detailPool.join(" ")}</div>
@@ -564,13 +582,25 @@ async function _interventionDivine(type, cibleId) {
     ? `<span class="de-success">${cible ? cible.name : "L'attaquant"} : +${cible ? effet : "(Dévotion Champs de bataille)"} dés-avantages ce round</span>`
     : `<span class="de-success">Difficulté pour frapper ${cible ? cible.name : "le défenseur"} : +${cible ? effet : "(Dévotion Foyer)"} ce round</span>`;
 
+  // Effet appliqué automatiquement pendant le round (ou au prochain jet sans combat lancé)
+  let auto = false;
+  if (cible && effet > 0) {
+    if (offensif) await poserFaveurRound(cible, { dieuNom: dieu.name, des: effet, libelle: `Faveur de ${dieu.name}` });
+    else await poserProtection(cible, { dieuNom: dieu.name, bonus: effet });
+    auto = true;
+  }
+  const enCombat = !!game.combat?.started;
+
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: dieu }),
     content: `
 <div class="de-chat-attaque de-chat-divin">
   <h3><i class="fas ${offensif ? "fa-fire" : "fa-shield-alt"}"></i> ${dieu.name} ${offensif ? "attise le carnage" : "protège"}</h3>
   <div class="de-roll-result">${effetHtml}</div>
-  <div class="de-chat-detail">${offensif ? "À ajouter en « Situation » lors de ses attaques." : "À ajouter à la difficulté des attaques contre lui."}</div>
+  <div class="de-chat-detail">${auto
+    ? (offensif ? "Ajouté automatiquement à ses attaques" : "Ajouté automatiquement à la difficulté pour le frapper")
+      + (enCombat ? " jusqu'à la fin du round." : " (prochaine attaque).")
+    : (offensif ? "À ajouter en « Situation » lors de ses attaques." : "À ajouter à la difficulté des attaques contre lui.")}</div>
   <p class="de-chat-sub"><em>${dieu.name} dépense 1 Divinité (reste : ${diviniteActuelle - 1})</em></p>
 </div>`
   });
