@@ -1,0 +1,101 @@
+{
+  "TYPES": {
+    "Actor": {
+      "heros":        "Héros",
+      "dieu":         "Dieu",
+      "figurant":     "Figurant",
+      "premier-role": "Premier Rôle"
+    },
+    "Item": {
+      "historique":  "Historique",
+      "equipment":   "Équipement",
+      "benediction": "Bénédiction",
+      "pouvoir":     "Pouvoir",
+      "malediction": "Malédiction"
+    }
+  },
+  "DIEUX": {
+    "Ajouter": "Ajouter",
+    "Supprimer": "Supprimer",
+    "Actif": "Actif",
+    "EnvoiChat": "Envoyer dans le chat",
+
+    "Tabs": {
+      "Principal": "Principal",
+      "Devotions": "Dévotions",
+      "Equipement": "Équipement",
+      "Pouvoirs": "Pouvoirs",
+      "Notes": "Notes"
+    },
+
+    "Heros": {
+      "Nom": "Nom du Héros",
+      "DieuPatron": "Dieu patron",
+      "Blessures": "Blessures",
+      "SeuilDefaite": "Seuil de défaite",
+      "Historiques": "Historiques",
+      "PasHistorique": "Aucun historique. Cliquez sur + pour en ajouter.",
+      "Devotions": "Dévotions",
+      "DevotionsDesc": "Chaque point de Dévotion donne un dé lors d'une action relevant du domaine du dieu.",
+      "DesAvantages": "Dés-avantages (combat)",
+      "DesAvantagesDesc": "Dés bonus accumulés en combat. Réinitialisés en cas d'échec ou de changement de cible.",
+      "Benedictions": "Bénédictions",
+      "Equipement": "Équipement",
+      "PasEquipement": "Aucun équipement.",
+      "Trajs": "Monnaie",
+      "TrajsDesc": "La monnaie courante de votre univers.",
+      "Notes": "Notes & équipement"
+    },
+
+    "Dieu": {
+      "Nom": "Dieu",
+      "Domaine": "Domaine",
+      "Devotion": "Dévotion",
+      "Divinite": "Points de Divinité",
+      "DiviniteDesc": "Total égal à la somme des Dévotions des héros actifs.",
+      "Depenser": "Dépenser 1 point",
+      "Gagner": "Gagner 1 point",
+      "PasDivinite": "Plus de points de Divinité disponibles !",
+      "HerosLies": "Héros liés",
+      "HerosLiesDesc": "Cochez les héros actifs dans ce scénario. Le total de leurs Dévotions détermine vos Points de Divinité.",
+      "Pouvoirs": "Pouvoirs divins",
+      "PasPouvoirs": "Aucun pouvoir. Faites glisser un Item de type 'pouvoir'."
+    },
+
+    "Figurant": {
+      "DevotionCombat": "Dévotion (Combat)"
+    },
+
+    "Equip": {
+      "DesEquip": "Dés équipement",
+      "BonusDefensif": "Bonus défensif",
+      "MalusMouvement": "Malus mouvement",
+      "Equipe": "Équipé",
+      "PasEquipement": "Aucun équipement."
+    },
+
+    "Roll": {
+      "Titre": "Jet de Dévotion",
+      "Lancer": "Lancer les dés",
+      "LancerDes": "Lancer les dés",
+      "Desc": "Choisissez le dieu et la difficulté",
+      "Succes": "succès",
+      "Difficulte": "Difficulté",
+      "ChoixDieu": "Dieu invoqué",
+      "DesHistoriques": "Dés d'historiques",
+      "DesHistoriquesDesc": "Ajoutez les dés de vos historiques pertinents.",
+      "DesBonus": "Dés bonus / malus",
+      "DesBonusDesc": "Terrain, circonstances, armure (malus négatif)...",
+      "VousRacontez": "Vous racontez le résultat !",
+      "MJRaconte": "Le MJ raconte le résultat.",
+      "PasDeDes": "Vous n'avez aucun dé à lancer !",
+      "Devotion": "Jet de Dévotion"
+    },
+
+    "Sheets": {
+      "Heros": "Fiche de Héros",
+      "Dieu": "Fiche de Dieu",
+      "Pnj": "Fiche de PNJ"
+    }
+  }
+}

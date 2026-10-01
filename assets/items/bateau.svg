@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#0e1a2a"/>
+  <!-- eau -->
+  <path d="M10,72 Q25,68 40,72 Q55,76 70,72 Q85,68 90,72 L90,92 L10,92 Z" fill="#1a3a5a" stroke="#2a5a7a" stroke-width="0.5"/>
+  <!-- coque -->
+  <path d="M18,52 L20,70 Q50,78 80,70 L82,52 Q80,48 50,46 Q20,48 18,52 Z" fill="#6a4a20" stroke="#9a7040" stroke-width="1"/>
+  <!-- mât -->
+  <rect x="49" y="16" width="3" height="38" fill="#5c3a1e"/>
+  <!-- voile -->
+  <path d="M52,18 L75,36 L52,50 Z" fill="#d4c890" stroke="#b0a060" stroke-width="0.8"/>
+  <!-- cordages -->
+  <line x1="52" y1="18" x2="78" y2="52" stroke="#8a7040" stroke-width="0.8"/>
+</svg>

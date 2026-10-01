@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a1a0e"/>
+  <!-- parchemin -->
+  <rect x="22" y="18" width="56" height="64" rx="3" fill="#d4c890" stroke="#b0a060" stroke-width="1"/>
+  <!-- bords enroulés -->
+  <path d="M22,18 Q18,18 18,26 Q18,18 26,18" fill="#c0b070"/>
+  <path d="M78,18 Q82,18 82,26 Q82,18 74,18" fill="#c0b070"/>
+  <path d="M22,82 Q18,82 18,74 Q18,82 26,82" fill="#c0b070"/>
+  <path d="M78,82 Q82,82 82,74 Q82,82 74,82" fill="#c0b070"/>
+  <!-- lignes d'écriture -->
+  <line x1="30" y1="32" x2="70" y2="32" stroke="#8a7040" stroke-width="1"/>
+  <line x1="30" y1="40" x2="70" y2="40" stroke="#8a7040" stroke-width="1"/>
+  <line x1="30" y1="48" x2="65" y2="48" stroke="#8a7040" stroke-width="1"/>
+  <line x1="30" y1="56" x2="70" y2="56" stroke="#8a7040" stroke-width="1"/>
+  <line x1="30" y1="64" x2="60" y2="64" stroke="#8a7040" stroke-width="1"/>
+  <!-- plume -->
+  <path d="M62,28 Q72,18 76,14 Q70,20 66,32 Q64,38 60,36 Q58,30 62,28 Z" fill="#e8d8a0"/>
+</svg>

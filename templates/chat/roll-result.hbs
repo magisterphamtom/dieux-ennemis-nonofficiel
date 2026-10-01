@@ -1,0 +1,19 @@
+{{!-- Résultat de jet de dévotion — thème sombre --}}
+<div class="de-chat-attaque">
+  <h3><i class="fas fa-dice-d6"></i> {{label}}{{#if difficulte}} — diff. {{difficulte}}{{/if}}</h3>
+  <div class="de-chat-info">
+    <span>Pool : <strong>{{nbDes}} dé{{#if (gt nbDes 1)}}s{{/if}}</strong></span>
+    {{#if difficulte}}<span>Difficulté : <strong>{{difficulte}}</strong></span>{{/if}}
+    <span>Succès : <strong>{{succes}}</strong></span>
+  </div>
+  <div class="de-chat-dice">
+    {{#each dice as |d|}}
+    <span class="de-chat-die {{#if d.success}}de-chat-die-ok{{else}}de-chat-die-fail{{/if}}">{{d.val}}</span>
+    {{/each}}
+  </div>
+  <div class="de-roll-result">
+    <span class="{{#if echec}}de-failure{{else}}{{#if reussite}}de-success{{else}}de-neutral{{/if}}{{/if}}">
+      {{verdict}}{{#if difficulte}} ({{succes}} / {{difficulte}} requis){{/if}}
+    </span>
+  </div>
+</div>

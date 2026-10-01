@@ -1,0 +1,2840 @@
+/* ============================================================
+   DIEUX ENNEMIS — Feuille de style principale
+   Inspiration : fiche officielle PDF, encre noire sur parchemin
+   ============================================================ */
+
+/* ── Imports de polices ─────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=IM+Fell+English:ital@0;1&display=swap');
+
+/* ── Variables ──────────────────────────────────────────────── */
+:root {
+  --de-parchment:     #e8dcc8;
+  --de-parchment-dark: #d4c5a9;
+  --de-parchment-mid: #cfc0a0;
+  --de-ink:           #0d0800;
+  --de-ink-brown:     #2a1a05;
+  --de-gold:          #8b6914;
+  --de-gold-light:    #c4922a;
+  --de-red:           #6e1010;
+  --de-shadow:        rgba(0,0,0,0.45);
+
+  --de-font-title:    'Cinzel', 'Palatino Linotype', serif;
+  --de-font-deco:     'Cinzel Decorative', 'Palatino Linotype', serif;
+  --de-font-body:     'IM Fell English', 'Georgia', serif;
+
+  --de-border-rough: 2px solid var(--de-ink);
+  --de-border-gold:  2px solid var(--de-gold);
+  --de-radius:       3px;
+}
+
+/* ── Reset de base pour les fiches ─────────────────────────── */
+.dieux-ennemis.sheet {
+  font-family: var(--de-font-body);
+  font-size: 15px;
+  color: var(--de-ink);
+  background: var(--de-parchment);
+}
+
+.dieux-ennemis.sheet * {
+  box-sizing: border-box;
+}
+
+.dieux-ennemis.sheet input,
+.dieux-ennemis.sheet select,
+.dieux-ennemis.sheet textarea {
+  font-family: var(--de-font-body);
+  font-size: 15px;
+  color: var(--de-ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--de-ink-brown);
+  border-radius: 0;
+  padding: 1px 3px;
+}
+
+.dieux-ennemis.sheet input:focus,
+.dieux-ennemis.sheet textarea:focus {
+  outline: none;
+  border-bottom: 2px solid var(--de-gold);
+  background: rgba(255,255,255,0.2);
+}
+
+/* ── En-tête de fenêtre Foundry ─────────────────────────────── */
+.dieux-ennemis.sheet .window-header {
+  background: var(--de-ink);
+  color: var(--de-parchment);
+  font-family: var(--de-font-title);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  border-bottom: 3px solid var(--de-gold);
+}
+
+.dieux-ennemis.sheet .window-header .window-title {
+  color: var(--de-gold-light);
+  font-weight: 600;
+}
+
+/* ── Texture parchemin (fond général) ──────────────────────── */
+.dieux-ennemis.sheet .window-content {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E"),
+    var(--de-parchment);
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Layout principal ───────────────────────────────────────── */
+.de-sheet-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--de-parchment);
+}
+
+/* ── HEADER ACTOR ───────────────────────────────────────────── */
+.de-header {
+  background: linear-gradient(160deg, #f5edda 0%, #eddfc4 60%, #e0d0ae 100%);
+  padding: 12px 14px 10px;
+  border-bottom: 4px double var(--de-gold);
+  position: relative;
+  box-shadow: inset 0 -4px 12px rgba(0,0,0,0.08);
+}
+
+.de-header-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Portrait cliquable */
+.de-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 110px;
+  height: 110px;
+  cursor: pointer;
+}
+
+.de-avatar {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border: 3px solid var(--de-gold);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(139,105,20,0.4), 0 2px 6px rgba(0,0,0,0.3);
+  display: block;
+  transition: filter 0.2s;
+}
+
+.de-avatar-wrap:hover .de-avatar {
+  filter: brightness(0.7);
+}
+
+.de-avatar-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--de-parchment);
+  font-size: 24px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+
+.de-avatar-wrap:hover .de-avatar-hint {
+  opacity: 1;
+}
+
+/* Info héros (nom + patron) */
+.de-header-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.de-actor-name {
+  font-family: var(--de-font-deco);
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--de-ink);
+  letter-spacing: 0.05em;
+  text-shadow: none;
+  border: none !important;
+  background: rgba(255,255,255,0.25) !important;
+  border-bottom: 2px solid var(--de-gold) !important;
+  border-radius: 3px 3px 0 0;
+  width: 100%;
+  padding: 4px 8px;
+  transition: background 0.15s;
+}
+
+.de-actor-name::placeholder { color: rgba(42,26,5,0.28); font-style: italic; }
+
+.de-actor-name:focus {
+  background: rgba(255,255,255,0.5) !important;
+  border-bottom-color: var(--de-gold) !important;
+  outline: none;
+}
+
+/* Dieu Patron */
+.de-patron-wrap {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.de-patron-label {
+  font-family: var(--de-font-title);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+}
+
+.de-patron-label .fa-ankh {
+  color: var(--de-gold);
+  margin-right: 3px;
+}
+
+.de-patron-select {
+  font-family: var(--de-font-body);
+  font-size: 14px;
+  color: var(--de-ink) !important;
+  border-bottom: 1px solid var(--de-gold) !important;
+  background: rgba(255,255,255,0.2);
+  width: 100%;
+  padding: 2px 4px;
+  border-radius: 2px 2px 0 0;
+}
+
+.de-patron-select option {
+  color: var(--de-ink);
+  background: var(--de-parchment);
+}
+
+/* Ancien selecteur générique — plus utilisé mais gardé pour compatibilité */
+.de-header-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 5px;
+}
+
+.de-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--de-ink-brown);
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.de-meta-item select {
+  color: var(--de-ink) !important;
+  font-family: var(--de-font-title);
+  font-size: 11px;
+  border-bottom-color: var(--de-gold) !important;
+}
+
+.de-meta-item select option { color: var(--de-ink); background: var(--de-parchment); }
+
+/* ── Hubris (header droit) ──────────────────────────────────── */
+.de-hubris {
+  text-align: center;
+  color: var(--de-ink);
+  font-family: var(--de-font-title);
+  background: rgba(139,105,20,0.08);
+  border: 2px solid var(--de-gold);
+  border-radius: 5px;
+  padding: 8px 14px 10px;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+.de-hubris-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Icône d'aide Hubris */
+.de-hubris-tooltip {
+  cursor: help;
+  color: var(--de-gold);
+  font-size: 13px;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+.de-hubris-tooltip:hover { opacity: 1; }
+
+/* Bloc côte à côte Niveau / Expérience */
+.de-hubris-bloc {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+}
+
+.de-hubris-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.de-hubris-stat-label {
+  font-family: var(--de-font-title);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+}
+
+.de-hubris-stat input {
+  width: 48px;
+  text-align: center;
+  color: var(--de-ink) !important;
+  border: none !important;
+  border-bottom: 2px solid var(--de-gold) !important;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: var(--de-font-title);
+  background: transparent;
+}
+
+.de-hubris-sep {
+  font-size: 18px;
+  color: var(--de-gold);
+  line-height: 1;
+  padding-bottom: 4px;
+  user-select: none;
+}
+
+/* Ancien .de-hubris-row — gardé pour compatibilité avec PNJ / autre */
+.de-hubris-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.de-hubris-row input {
+  width: 36px;
+  text-align: center;
+  color: var(--de-ink) !important;
+  border-bottom-color: var(--de-gold) !important;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ── NAVIGATION ONGLETS ─────────────────────────────────────── */
+.de-tabs {
+  display: flex;
+  background: var(--de-ink-brown);
+  border-bottom: 2px solid var(--de-gold);
+  padding: 0 6px;
+}
+
+.de-tabs .item {
+  padding: 6px 14px;
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--de-parchment-mid);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -2px;
+}
+
+.de-tabs .item:hover { color: var(--de-gold-light); }
+.de-tabs .item.active {
+  color: var(--de-gold-light);
+  border-bottom-color: var(--de-gold-light);
+  background: rgba(196,146,42,0.08);
+}
+
+/* ── CORPS DE FICHE ─────────────────────────────────────────── */
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--de-gold) var(--de-parchment-dark);
+}
+
+.sheet-tab { display: none; }
+.sheet-tab.active { display: block; }
+
+/* ── SECTIONS (cadres à bordure rugueuse) ───────────────────── */
+.de-section {
+  margin-bottom: 12px;
+  border: 2px solid var(--de-ink);
+  border-radius: var(--de-radius);
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(139,105,20,0.2), 2px 2px 4px var(--de-shadow);
+}
+
+/* Titre de section style "boîte dessinée à la main" */
+.de-section-title {
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--de-parchment);
+  background: var(--de-ink);
+  padding: 4px 10px;
+  margin: 0;
+  border-bottom: 2px solid var(--de-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.de-section-title .de-section-title-deco {
+  color: var(--de-gold-light);
+  font-size: 9px;
+  font-weight: 400;
+  position: absolute;
+  right: 10px;
+}
+
+/* Quand la déco est présente, le titre parent doit être en position relative */
+.de-section-title:has(.de-section-title-deco) {
+  position: relative;
+}
+
+.de-section-body {
+  padding: 8px 10px;
+}
+
+/* ── BLESSURES (cercles) ────────────────────────────────────── */
+.de-blessures-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px 6px;
+}
+
+.de-blessures-row {
+  display: flex;
+  gap: 10px;
+}
+
+.blessure-case {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(160, 110, 40, 0.5);
+  cursor: pointer;
+  background: rgba(0,0,0,0.15);
+  position: relative;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.blessure-case::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.blessure-case.filled {
+  border-color: var(--de-red);
+  background: radial-gradient(circle at 35% 35%, #c03030, #7a0f0f);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), 0 0 6px rgba(180,30,30,0.4);
+}
+
+.blessure-case.filled::before {
+  background: radial-gradient(circle at 30% 30%, rgba(255,100,100,0.25), transparent);
+}
+
+.blessure-case:hover:not(.filled) {
+  border-color: var(--de-red);
+  background: rgba(110,16,16,0.3);
+  transform: scale(1.1);
+}
+.blessure-case:hover.filled {
+  background: radial-gradient(circle at 35% 35%, #d03030, #500000);
+  transform: scale(1.05);
+}
+
+.de-blessures-count {
+  font-family: var(--de-font-title);
+  font-size: 11px;
+  color: var(--de-ink-brown);
+  letter-spacing: 0.05em;
+}
+
+/* ── DÉVOTIONS ──────────────────────────────────────────────── */
+.de-devotions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.de-devotions-table th {
+  font-family: var(--de-font-title);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--de-parchment);
+  background: var(--de-ink-brown);
+  padding: 4px 6px;
+  border: 1px solid var(--de-ink);
+  text-align: center;
+}
+
+.de-devotions-table td {
+  border: 1px solid rgba(13,8,0,0.3);
+  padding: 3px 6px;
+  vertical-align: middle;
+}
+
+.de-devotions-table tr:nth-child(odd) td { background: rgba(255,255,255,0.06); }
+.de-devotions-table tr:hover td { background: rgba(196,146,42,0.08); }
+
+.de-god-name {
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--de-ink);
+  white-space: nowrap;
+}
+
+.de-god-domain {
+  font-size: 12px;
+  color: var(--de-ink-brown);
+  font-style: italic;
+}
+
+.de-devotion-val {
+  width: 36px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: var(--de-font-title);
+  color: var(--de-ink);
+}
+
+.de-devotion-val:focus {
+  background: rgba(196,146,42,0.15) !important;
+}
+
+.de-roll-btn {
+  background: none;
+  border: 1px solid var(--de-ink);
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 1px 6px;
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  color: var(--de-ink-brown);
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+
+.de-roll-btn:hover {
+  background: var(--de-ink);
+  color: var(--de-parchment);
+  border-color: var(--de-gold);
+}
+
+.de-seuil-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6b1010, #3a0808);
+  border: 1.5px solid rgba(180, 40, 40, 0.6);
+  color: #f0c0c0;
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  text-transform: uppercase;
+}
+
+.de-seuil-badge::before {
+  content: '⚠';
+  font-size: 14px;
+  color: #f08080;
+}
+
+.de-seuil-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ff9090;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+/* Seuil inline dans le tableau Dévotions */
+.de-seuil-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(100, 10, 10, 0.3);
+  border: 1px solid rgba(180,40,40,0.4);
+  border-radius: 3px;
+  color: #f08080;
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 1px 6px;
+}
+
+/* ── HISTORIQUES ────────────────────────────────────────────── */
+.de-historiques-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.de-historique-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-bottom: 1px solid rgba(13,8,0,0.15);
+}
+
+.de-historique-row:last-child { border-bottom: none; }
+
+.de-historique-name {
+  flex: 1;
+  font-size: 14px;
+}
+
+.de-historique-val {
+  width: 28px;
+  text-align: center;
+  font-weight: bold;
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  color: var(--de-red);
+}
+
+/* ── ÉQUIPEMENT ─────────────────────────────────────────────── */
+.de-equip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.de-equip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-bottom: 1px solid rgba(13,8,0,0.12);
+  cursor: default;
+}
+
+.de-equip-row.equipped {
+  background: rgba(139,105,20,0.1);
+}
+
+.de-equip-toggle {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--de-gold);
+  border-radius: 2px;
+  cursor: pointer;
+  background: transparent;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.de-equip-toggle.equipped { background: var(--de-gold); }
+
+.de-equip-name { flex: 1; font-size: 14px; }
+
+.de-equip-bonus {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  color: var(--de-ink-brown);
+}
+
+/* ── BÉNÉDICTIONS ───────────────────────────────────────────── */
+.de-benediction-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(13,8,0,0.12);
+}
+
+.de-benediction-name { flex: 1; font-size: 14px; }
+
+.de-benediction-dieu {
+  font-size: 10px;
+  color: var(--de-ink-brown);
+  font-style: italic;
+}
+
+.de-benediction-used {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* ── RESSOURCES (Trajs / Pièces percées) ────────────────────── */
+.de-ressources {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.de-ressource {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.de-ressource-label {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+}
+
+.de-ressource input {
+  width: 60px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  font-family: var(--de-font-title);
+  border: none !important;
+  border-bottom: 2px solid var(--de-ink) !important;
+  background: transparent;
+}
+
+/* Trajs = or chaud */
+.de-ressource.de-trajs input {
+  color: #d4a017;
+  border-bottom-color: #d4a017 !important;
+}
+.de-ressource.de-trajs .de-ressource-label {
+  color: #c49016;
+}
+
+/* Pièces percées = argent bleuté */
+.de-ressource.de-pieces input {
+  color: #8ab4d4;
+  border-bottom-color: #6090b8 !important;
+}
+.de-ressource.de-pieces .de-ressource-label {
+  color: #7aa4c4;
+}
+
+/* ── CHAMPS TEXTE (répartie, faiblesse, etc.) ───────────────── */
+.de-trait-label {
+  font-family: var(--de-font-title);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.de-trait-input {
+  width: 100%;
+  border: none !important;
+  border-bottom: 1px solid var(--de-ink-brown) !important;
+  font-style: italic;
+  font-size: 13px;
+  padding: 2px 0;
+}
+
+.de-editor-content {
+  min-height: 60px;
+}
+
+/* ── GRILLE DEUX COLONNES ───────────────────────────────────── */
+.de-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.de-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+/* ── DÉS-AVANTAGES ──────────────────────────────────────────── */
+.de-desav-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  padding: 6px 0 8px;
+}
+
+.de-desav-label {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+}
+
+.de-desav-val {
+  width: 60px;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--de-red);
+  border-bottom: 2.5px solid var(--de-red) !important;
+  background: transparent;
+}
+
+/* ── BOUTONS ACTION ─────────────────────────────────────────── */
+.de-btn {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--de-ink);
+  color: var(--de-parchment);
+  border: 1px solid var(--de-gold);
+  border-radius: 2px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.de-btn:hover { background: var(--de-gold); color: var(--de-ink); }
+
+.de-btn-sm {
+  font-family: var(--de-font-title);
+  font-size: 9px;
+  background: none;
+  border: 1px solid var(--de-ink-brown);
+  border-radius: 2px;
+  padding: 1px 5px;
+  cursor: pointer;
+  color: var(--de-ink-brown);
+  transition: all 0.12s;
+}
+
+.de-btn-sm:hover { background: var(--de-ink); color: var(--de-parchment); }
+.de-btn-sm.danger:hover { background: var(--de-red); border-color: var(--de-red); color: var(--de-parchment); }
+
+/* ── ICÔNES ─────────────────────────────────────────────────── */
+.de-item-controls {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.de-historique-row:hover .de-item-controls,
+.de-equip-row:hover .de-item-controls,
+.de-benediction-row:hover .de-item-controls {
+  opacity: 1;
+}
+
+.de-item-controls a {
+  color: var(--de-ink-brown);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.de-item-controls a:hover { color: var(--de-red); }
+
+/* ── ORNEMENTS DÉCORATIFS ───────────────────────────────────── */
+.de-ornement {
+  text-align: center;
+  color: var(--de-gold-light);
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.7;
+  letter-spacing: 0.3em;
+}
+
+/* ── FICHE DIEU ─────────────────────────────────────────────── */
+.dieux-ennemis.sheet.dieu .de-header { background: #1a0a2e; border-bottom-color: #9b59b6; }
+.dieux-ennemis.sheet.dieu .de-actor-name { border-bottom-color: #9b59b6 !important; }
+.dieux-ennemis.sheet.dieu .de-section-title { background: #1a0a2e; }
+
+.de-divinite-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.de-divinite-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--de-gold);
+  background: var(--de-ink);
+  color: var(--de-gold-light);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--de-font-title);
+}
+
+.de-divinite-btn:hover { background: var(--de-gold); color: var(--de-ink); }
+
+.de-divinite-display {
+  font-family: var(--de-font-title);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--de-ink);
+  min-width: 60px;
+  text-align: center;
+}
+
+.de-divinite-max {
+  font-size: 14px;
+  color: var(--de-ink-brown);
+}
+
+/* ── HEROS LIÉS (fiche dieu) ────────────────────────────────── */
+.de-heros-lie-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(13,8,0,0.12);
+}
+
+.de-heros-lie-nom { flex: 1; }
+.de-heros-lie-dev { width: 36px; text-align: center; font-weight: bold; }
+.de-heros-lie-xp  { width: 40px; text-align: center; }
+
+/* ── FICHE PNJ ──────────────────────────────────────────────── */
+.dieux-ennemis.sheet.pnj .de-header { background: #1a1a0e; border-bottom-color: #6e6e1a; }
+.dieux-ennemis.sheet.pnj .de-actor-name { border-bottom-color: #6e6e1a !important; }
+
+/* ── DICES dans les cartes de chat sombres ──────────────────── */
+.de-chat-dice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 12px;
+  border-bottom: 1px solid rgba(192,160,96,.2);
+}
+
+.de-chat-die {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Palatino Linotype", Georgia, serif;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid #5a3a1a;
+  background: #1a0a02;
+  color: #8a6040;
+}
+
+.de-chat-die-ok {
+  background: linear-gradient(160deg, #2a4a1a 0%, #1a3010 100%);
+  border-color: #4a8a2a;
+  color: #7ec87e;
+  text-shadow: 0 0 6px rgba(100,200,100,.4);
+}
+
+.de-chat-die-fail {
+  background: #140802;
+  border-color: #3a1a08;
+  color: #5a3020;
+}
+
+/* ── DIALOG ROLL ────────────────────────────────────────────── */
+.de-roll-dialog label {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--de-ink-brown);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.de-roll-dialog select,
+.de-roll-dialog input {
+  width: 100%;
+  font-family: var(--de-font-body);
+  border: 1px solid var(--de-ink);
+  border-radius: 2px;
+  padding: 3px 6px;
+  background: var(--de-parchment);
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+/* ── ITEM CARD ──────────────────────────────────────────────── */
+.de-item-card {
+  background: var(--de-parchment);
+  border: 2px solid var(--de-ink);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.de-item-card-header {
+  background: var(--de-ink-brown);
+  color: var(--de-parchment);
+  padding: 5px 10px;
+  font-family: var(--de-font-title);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.de-item-card-body {
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--de-ink);
+}
+
+/* ── ORNEMENT SÉPARATEUR ─────────────────────────────────────── */
+.de-sep {
+  text-align: center;
+  color: var(--de-gold);
+  font-size: 12px;
+  margin: 6px 0;
+  opacity: 0.6;
+  letter-spacing: 0.4em;
+}
+
+/* ── SCROLLBAR ──────────────────────────────────────────────── */
+.sheet-body::-webkit-scrollbar { width: 6px; }
+.sheet-body::-webkit-scrollbar-track { background: var(--de-parchment-dark); }
+.sheet-body::-webkit-scrollbar-thumb { background: var(--de-gold); border-radius: 3px; }
+
+/* ── Carte du monde ─────────────────────────────────────────── */
+#dieux-ennemis-carte-monde .window-content {
+  padding: 0;
+  background: #000;
+  overflow: hidden;
+}
+.de-carte-monde {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.de-carte-monde img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: zoom-in;
+  display: block;
+}
+
+/* ============================================================
+   CARTES DE CHAT — Attaque & Combat
+   ============================================================ */
+
+.de-chat-attaque,
+.de-chat-intervention {
+  font-family: "Palatino Linotype", Georgia, serif;
+  background: linear-gradient(160deg, #1c0e04 0%, #2a1208 60%, #1c0e04 100%);
+  border: 1px solid #8b5e2a;
+  border-radius: 6px;
+  overflow: hidden;
+  color: #e8d5a3;
+}
+
+.de-chat-attaque h3,
+.de-chat-intervention h3 {
+  margin: 0;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #5a1010 0%, #8b1a1a 50%, #5a1010 100%);
+  color: #f5e6c0;
+  font-size: 14px;
+  letter-spacing: .06em;
+  border-bottom: 1px solid #c0702a;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+.de-chat-attaque h3 i,
+.de-chat-intervention h3 i {
+  margin-right: 6px;
+  color: #f5c842;
+}
+
+.de-chat-info {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #b09060;
+  border-bottom: 1px solid rgba(192,160,96,.2);
+}
+
+.de-chat-info strong { color: #f5c842; }
+
+.de-roll-result {
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.de-success {
+  color: #7ec87e;
+  font-weight: bold;
+}
+.de-failure {
+  color: #e07070;
+}
+.de-neutral {
+  color: #e8d5a3;
+}
+.de-defaite {
+  color: #ff9933 !important;
+  text-shadow: 0 0 8px rgba(255,100,0,.4);
+}
+
+.de-btn-row,
+.de-intervention-row {
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px;
+  border-top: 1px solid rgba(192,160,96,.2);
+  flex-wrap: wrap;
+}
+
+.de-btn-row button,
+.de-intervention-row button {
+  flex: 1;
+  padding: 5px 8px;
+  border-radius: 3px;
+  font-family: "Palatino Linotype", Georgia, serif;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid #8b5e2a;
+  background: linear-gradient(180deg, #3d2010 0%, #2a1208 100%);
+  color: #e8d5a3;
+  transition: background .15s;
+}
+
+.de-btn-row button:hover,
+.de-intervention-row button:hover {
+  background: linear-gradient(180deg, #5a2a10 0%, #3d1a08 100%);
+  border-color: #c0702a;
+  color: #f5e6c0;
+}
+
+.de-btn-row button i,
+.de-intervention-row button i {
+  margin-right: 4px;
+  color: #f5c842;
+}
+
+.de-chat-sub {
+  padding: 4px 12px 6px;
+  font-size: 10px;
+  color: #806040;
+  border-top: 1px solid rgba(192,160,96,.15);
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DIALOG D'ATTAQUE — Dieux Ennemis
+   Sélecteurs larges pour couvrir ApplicationV2 + AppV1
+   ═══════════════════════════════════════════════════════════ */
+
+/* Fenêtre entière */
+.application.de-dialog-attaque,
+.de-dialog-attaque {
+  border: 2px solid #8b5e2a !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,220,120,.08) !important;
+}
+
+/* En-tête rouge bordeaux */
+.application.de-dialog-attaque .window-header,
+.de-dialog-attaque .window-header {
+  background: linear-gradient(90deg, #3d0808 0%, #7a1010 40%, #8b1a1a 60%, #3d0808 100%) !important;
+  color: #f5e6c0 !important;
+  border-bottom: 2px solid #c0702a !important;
+  text-shadow: 0 1px 4px rgba(0,0,0,.7) !important;
+  padding: 8px 12px !important;
+  font-size: 15px !important;
+  letter-spacing: .04em !important;
+}
+.application.de-dialog-attaque .window-header .window-title,
+.de-dialog-attaque .window-header .window-title,
+.de-dialog-attaque .window-header h4 {
+  color: #f5e6c0 !important;
+  font-family: "Palatino Linotype", Georgia, serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+/* Fond parchemin texturé */
+.application.de-dialog-attaque .window-content,
+.de-dialog-attaque .window-content {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E"),
+    linear-gradient(170deg, #fdf8ec 0%, #f5e8c8 35%, #eeddb0 70%, #f0e4c0 100%) !important;
+  color: #1e0e02 !important;
+  padding: 14px 16px !important;
+  font-family: "Palatino Linotype", Georgia, serif !important;
+  font-size: 14px !important;
+}
+
+/* Bouton Lancer l'attaque */
+.application.de-dialog-attaque footer button,
+.application.de-dialog-attaque .dialog-buttons button,
+.de-dialog-attaque footer button,
+.de-dialog-attaque .dialog-buttons button,
+.de-dialog-attaque [data-button="ok"] {
+  background: linear-gradient(180deg, #7a1a1a 0%, #4a0808 60%, #380606 100%) !important;
+  color: #f5e6c0 !important;
+  border: 1px solid #c0702a !important;
+  font-family: "Palatino Linotype", Georgia, serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  padding: 8px 0 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,.6) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,220,150,.15) !important;
+  transition: background .15s, border-color .15s !important;
+}
+.application.de-dialog-attaque footer button:hover,
+.de-dialog-attaque footer button:hover,
+.de-dialog-attaque [data-button="ok"]:hover {
+  background: linear-gradient(180deg, #9b2828 0%, #6a1010 100%) !important;
+  border-color: #e09030 !important;
+}
+
+/* ── Intérieur du dialog : contenu .de-atk ──────────────── */
+
+.de-atk {
+  font-family: "Palatino Linotype", Georgia, serif !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+/* Bandeau 3 cases stats */
+.de-atk-banner {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 8px !important;
+}
+
+.de-atk-stat {
+  background: linear-gradient(160deg, #1e0c02, #3a1a06) !important;
+  border: 1.5px solid #8b5e2a !important;
+  border-radius: 6px !important;
+  padding: 10px 6px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  box-shadow: inset 0 1px 0 rgba(255,220,120,.08), 0 2px 4px rgba(0,0,0,.3) !important;
+}
+
+.de-atk-stat-lbl {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: #a07840 !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+}
+
+.de-atk-stat-val {
+  font-size: 32px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  color: #f5c842 !important;
+}
+
+.de-atk-stat.de-atk-pool {
+  border-color: #c05010 !important;
+  background: linear-gradient(160deg, #1e0802, #3a1000) !important;
+}
+.de-atk-stat.de-atk-pool .de-atk-stat-lbl { color: #d07030 !important; }
+.de-atk-stat.de-atk-pool .de-atk-stat-val {
+  color: #ff8040 !important;
+  font-size: 40px !important;
+}
+
+/* Labels de section */
+.de-atk-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.de-atk-label {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #4a1800 !important;
+  border-bottom: 1px solid rgba(160,100,30,.4) !important;
+  padding-bottom: 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.de-atk-label i {
+  color: #8b1a1a !important;
+  font-size: 16px !important;
+  width: 18px !important;
+  text-align: center !important;
+}
+
+.de-atk-hint {
+  font-size: 12px !important;
+  color: #7a5020 !important;
+  font-style: italic !important;
+  font-weight: normal !important;
+  margin-left: 4px !important;
+}
+
+/* Selects et inputs — couleurs solides pour garantir la lisibilité */
+.application.de-dialog-attaque .de-atk select,
+.application.de-dialog-attaque .de-atk input[type="number"],
+.de-atk select,
+.de-atk input[type="number"] {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding: 8px 12px !important;
+  border: 1.5px solid #a07840 !important;
+  border-radius: 4px !important;
+  /* Couleur solide, pas de dégradé ni rgba — nécessaire pour que les options soient lisibles */
+  background-color: #fdf8ec !important;
+  background-image: none !important;
+  color: #1a0a00 !important;
+  /* Neutraliser les variables Foundry */
+  --color-text-dark-primary: #1a0a00;
+  --color-text-light-primary: #1a0a00;
+  font-family: "Palatino Linotype", Georgia, serif !important;
+  font-size: 15px !important;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.1) !important;
+  opacity: 1 !important;
+}
+
+.application.de-dialog-attaque .de-atk select,
+.de-atk select {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
+
+.application.de-dialog-attaque .de-atk select:focus,
+.application.de-dialog-attaque .de-atk input[type="number"]:focus,
+.de-atk select:focus,
+.de-atk input[type="number"]:focus {
+  outline: none !important;
+  border-color: #8b1a1a !important;
+  box-shadow: 0 0 0 2px rgba(139,26,26,.2), inset 0 1px 3px rgba(0,0,0,.1) !important;
+}
+
+.application.de-dialog-attaque .de-atk select option,
+.de-atk select option {
+  background-color: #fdf6e3 !important;
+  color: #1a0a00 !important;
+  font-size: 14px !important;
+}
+
+/* Ligne label + input numérique côte à côte */
+.de-atk-row {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: center !important;
+}
+
+.de-atk-row .de-atk-label {
+  border: none !important;
+  padding: 0 !important;
+  flex: 1 !important;
+  font-size: 15px !important;
+}
+
+.de-atk-row input[type="number"] {
+  width: 72px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  padding: 6px 0 !important;
+}
+
+/* ── Correctifs lisibilité / débordement (v0.1.1) ─────── */
+.application.de-dialog-attaque .window-content { overflow-x: hidden !important; }
+.application.de-dialog-attaque .de-atk select {
+  height: auto !important;
+  min-height: 38px !important;
+  line-height: 1.4 !important;
+  padding: 6px 10px !important;
+  text-overflow: ellipsis !important;
+}
+.application.de-dialog-attaque .de-atk-row .de-atk-label {
+  min-width: 0 !important;
+  line-height: 1.25 !important;
+}
+.application.de-dialog-attaque .de-atk-row input[type="number"] {
+  flex: 0 0 72px !important;
+  width: 72px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  text-align: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+.de-atk-checklist {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  max-height: 150px !important;
+  overflow-y: auto !important;
+}
+.de-atk-check {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  background: #fdf8ec !important;
+  border: 1.5px solid #a07840 !important;
+  border-radius: 4px !important;
+  color: #1a0a00 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+}
+.de-atk-check:has(input:checked) {
+  border-color: #8b1a1a !important;
+  background: #f6e3c4 !important;
+}
+.de-atk-check input[type="checkbox"] { margin: 0 !important; flex: none !important; }
+.de-atk-check span:first-of-type { flex: 1 !important; min-width: 0 !important; }
+.de-atk-check-bonus {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #8b1a1a !important;
+  white-space: nowrap !important;
+}
+
+.de-atk-pool-detail {
+  font-size: 11px !important;
+  color: #d07030 !important;
+  min-height: 13px !important;
+  letter-spacing: .04em !important;
+}
+.de-chat-detail {
+  font-size: 12px;
+  font-style: italic;
+  color: #7a5020;
+  margin: 2px 0 4px;
+}
+
+.de-atk [hidden] { display: none !important; }
+.de-rq-warn {
+  font-size: 12px !important;
+  font-style: italic !important;
+  color: #8b1a1a !important;
+}
+.de-hubris .roll-hubris { display: block; margin: 6px auto 0; }
+
+.de-atk-check-malus .de-atk-check-bonus { color: #555 !important; }
+.de-chat-die.de-chat-die-relance { outline: 2px solid #f5c842; outline-offset: 1px; }
+
+/* Séparateur */
+.de-atk-sep {
+  border: none !important;
+  border-top: 1px solid rgba(140,90,20,.35) !important;
+  margin: 0 !important;
+}
+
+/* ── Champs texte longs (remplace {{editor}} AppV1) ─────── */
+.de-editor-field {
+  width: 100%;
+  min-height: 80px;
+  padding: 6px 8px;
+  border: 1px solid #c0a060;
+  border-radius: 3px;
+  background: #fdf6e3;
+  color: var(--de-ink-dark, #2a1a0a);
+  font-family: "Palatino Linotype", Georgia, serif;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.de-editor-field:focus {
+  outline: none;
+  border-color: #8b1a1a;
+  box-shadow: 0 0 0 2px rgba(139,26,26,.12);
+}
+
+/* ── Boutons Attaque / Initiative dans l'en-tête ─────────── */
+.de-header-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(192,160,96,.35);
+}
+
+.de-btn-action {
+  font-family: var(--de-font-title, "Palatino Linotype", Georgia, serif) !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  background: linear-gradient(180deg, #6b1a1a 0%, #3d0a0a 100%) !important;
+  color: #f5e6c0 !important;
+  border: 1px solid #c0702a !important;
+  border-radius: 3px !important;
+  padding: 5px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5) !important;
+  box-shadow: inset 0 1px 0 rgba(255,220,150,.15), 0 1px 3px rgba(0,0,0,.3) !important;
+}
+
+.de-btn-action:hover {
+  background: linear-gradient(180deg, #8b2a2a 0%, #5a1010 100%) !important;
+  border-color: #e0902a !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255,220,150,.2), 0 2px 5px rgba(0,0,0,.4) !important;
+}
+
+.de-btn-action i {
+  color: #f5c842 !important;
+  font-size: 10px !important;
+}
+
+/* ── Dialog d'attaque — renforcement couleurs ─────────────── */
+.de-combat-dialog,
+.de-combat-dialog * {
+  box-sizing: border-box;
+}
+
+.de-combat-dialog {
+  color: #2a1a0a !important;
+}
+
+.de-combat-dialog label {
+  color: #5a2a00 !important;
+  font-weight: bold !important;
+}
+
+.de-combat-dialog select,
+.de-combat-dialog input[type="number"] {
+  background: #fdf6e3 !important;
+  color: #2a1a0a !important;
+  border: 1px solid #8b5e2a !important;
+}
+
+.de-combat-summary {
+  background: linear-gradient(135deg, #2a1208 0%, #3d1a08 100%) !important;
+  color: #e8d5a3 !important;
+}
+
+.de-combat-summary strong {
+  color: #f5c842 !important;
+}
+
+/* ── Wiki Viewer ─────────────────────────────────────────── */
+#de-wiki-viewer .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.de-wiki-layout {
+  display: flex;
+  height: 100%;
+  font-family: "Palatino Linotype", Georgia, serif;
+}
+
+/* Sidebar navigation */
+.de-wiki-sidebar {
+  width: 200px;
+  min-width: 160px;
+  background: linear-gradient(180deg, #1a0a02 0%, #2a1208 100%);
+  border-right: 2px solid #5a3010;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.de-wiki-sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.de-wiki-nav-item {
+  padding: 8px 12px;
+  color: #c8a060;
+  cursor: pointer;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(90,48,16,.3);
+  transition: background .15s, color .15s;
+  line-height: 1.3;
+}
+
+.de-wiki-nav-item:hover {
+  background: rgba(192,128,48,.15);
+  color: #f5d88a;
+}
+
+.de-wiki-nav-item.active {
+  background: linear-gradient(90deg, rgba(139,26,26,.4) 0%, rgba(90,48,16,.3) 100%);
+  color: #f5d88a;
+  font-weight: bold;
+  border-left: 3px solid #8b1a1a;
+}
+
+/* Zone principale */
+.de-wiki-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fdf6e3;
+}
+
+/* Onglets de pages */
+.de-wiki-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 8px 0;
+  background: #f0e4c8;
+  border-bottom: 1px solid #c8a060;
+}
+
+.de-wiki-tab {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: "Palatino Linotype", Georgia, serif;
+  background: #e8d5a3;
+  border: 1px solid #a07840;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  color: #5a3010;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.de-wiki-tab:hover { background: #d4b870; }
+
+.de-wiki-tab.active {
+  background: #fdf6e3;
+  color: #8b1a1a;
+  font-weight: bold;
+  border-color: #8b1a1a;
+}
+
+/* Contenu */
+.de-wiki-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  color: #2a1a0a;
+  line-height: 1.7;
+  font-size: 15px;
+  font-family: "Palatino Linotype", Georgia, serif;
+}
+
+.de-wiki-content h3 {
+  color: #8b1a1a;
+  border-bottom: 1px solid #c8a060;
+  padding-bottom: 4px;
+  margin-top: 16px;
+}
+
+.de-wiki-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.de-wiki-content th {
+  background: #5a1010;
+  color: #f5e6c0;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.de-wiki-content td {
+  padding: 5px 10px;
+  border-bottom: 1px solid #d4b870;
+}
+
+.de-wiki-content tr:nth-child(even) td { background: rgba(192,160,96,.1); }
+
+.de-wiki-content strong { color: #5a1010; }
+
+.de-wiki-content em { color: #5a3a1a; }
+
+.de-wiki-content ul, .de-wiki-content ol {
+  padding-left: 20px;
+}
+
+.de-wiki-content li { margin-bottom: 4px; }
+
+/* Liens internes du wiki (data-action="wikiLink") */
+.de-wiki-content .de-wiki-link {
+  color: #7a2020;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+}
+.de-wiki-content .de-wiki-link:hover {
+  color: #b83030;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ONGLET ÉCRAN
+   ════════════════════════════════════════════════════════════ */
+
+.de-ecran-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.de-ecran-section { margin-bottom: 0; }
+
+.de-ecran-large {
+  grid-column: 1 / -1;  /* pleine largeur */
+}
+
+/* ── Tableaux de référence ──────────────────────────────── */
+.de-ecran-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.de-ecran-table th {
+  background: var(--de-ink-brown);
+  color: var(--de-parchment);
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.de-ecran-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--de-parchment-dark);
+  color: var(--de-ink);
+  vertical-align: middle;
+}
+
+.de-ecran-table tbody tr:nth-child(even) td {
+  background: rgba(0,0,0,0.04);
+}
+
+.de-diff-val {
+  text-align: center;
+  font-family: var(--de-font-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--de-ink-brown);
+}
+
+.de-diff-hard td { color: var(--de-red); }
+.de-diff-myth td {
+  color: var(--de-parchment) !important;
+  background: var(--de-ink) !important;
+  font-weight: 700;
+}
+
+/* ── Résultats des dés ──────────────────────────────────── */
+.de-des-resultats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.de-de-row { display: flex; }
+
+.de-des-groupe {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.de-des-echec {
+  background: rgba(110,16,16,0.08);
+  border: 1px solid rgba(110,16,16,0.25);
+}
+
+.de-des-succes {
+  background: rgba(26,74,26,0.08);
+  border: 1px solid rgba(26,74,26,0.25);
+}
+
+.de-de-svg {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.de-des-label {
+  font-family: var(--de-font-title);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-left: 4px;
+}
+
+.de-echec-label { color: var(--de-red); }
+.de-succes-label { color: #2a6e2a; }
+
+.de-des-regle {
+  font-size: 12px;
+  color: var(--de-ink-brown);
+  background: rgba(139,105,20,0.07);
+  border-left: 3px solid var(--de-gold);
+  padding: 6px 10px;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.5;
+}
+
+/* ── Test & Formule ─────────────────────────────────────── */
+.de-ecran-formule {
+  color: var(--de-ink);
+  padding: 8px 10px;
+  background: rgba(139,105,20,0.06);
+  border-radius: 4px;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.de-formule-titre {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--de-font-title);
+  color: var(--de-ink-brown);
+  margin-bottom: 4px;
+}
+
+.de-formule-ligne {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--de-ink);
+}
+
+.de-formule-ou {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--de-gold);
+  font-style: italic;
+  margin: 4px 0;
+}
+
+/* Test : mise en page côte à côte formule + oppositions */
+.de-test-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.de-test-layout .de-ecran-formule {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.de-ecran-oppositions {
+  flex: 1;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 4px;
+  border-left: 3px solid var(--de-gold);
+}
+
+.de-ecran-oppositions-titre {
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--de-ink-brown);
+  margin-bottom: 8px;
+}
+
+.de-ecran-oppo-ligne {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 6px;
+  color: var(--de-ink);
+}
+
+/* ── Combat ─────────────────────────────────────────────── */
+/* ── ancien combat (conservé pour compatibilité) ── */
+.de-ecran-combat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.de-ecran-combat-titre {
+  font-family: var(--de-font-title); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--de-gold); border-bottom: 1px solid var(--de-gold);
+  padding-bottom: 2px; margin-bottom: 4px;
+}
+.de-ecran-ol { margin: 4px 0 0 16px; padding: 0; font-size: 12px; line-height: 1.6; }
+.de-ecran-p { font-size: 12px; margin: 0 0 5px; line-height: 1.5; color: var(--de-ink); }
+
+/* ── NOUVEAU COMBAT ─────────────────────────────── */
+.de-combat-section { background: rgba(0,0,0,0.15); }
+
+.de-combat-body {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.de-combat-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Colonne centrale : bloc Blessures centré */
+.de-combat-col-blessures {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+}
+
+.de-combat-blessures-center {
+  width: 100%;
+  text-align: center;
+  border-color: rgba(200, 50, 50, 0.5) !important;
+  background: rgba(120, 10, 10, 0.12) !important;
+}
+
+/* Bloc individuel */
+.de-combat-bloc {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(183, 140, 50, 0.25);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.de-combat-bloc-titre {
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--de-gold);
+  border-bottom: 1px solid rgba(183,140,50,0.35);
+  padding-bottom: 5px;
+  margin-bottom: 8px;
+}
+
+.de-combat-texte {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 5px;
+  color: var(--de-ink);
+}
+.de-combat-texte:last-child { margin-bottom: 0; }
+
+/* Phases */
+.de-combat-phases { border-color: rgba(183,140,50,0.5); }
+
+.de-combat-phase-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.de-combat-phase-row:last-child { border-bottom: none; }
+
+.de-combat-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--de-gold);
+  color: #1a1200;
+  font-weight: 900;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.de-combat-phase-nom {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--de-ink);
+  letter-spacing: 0.04em;
+}
+
+/* Blessures */
+.de-combat-blessures { border-color: rgba(200, 50, 50, 0.4); }
+
+.de-combat-blessure-max {
+  font-size: 18px;
+  font-weight: 900;
+  color: #d44;
+  text-align: center;
+  padding: 6px 0 4px;
+  letter-spacing: 0.05em;
+}
+
+/* Difficulté formule */
+.de-combat-difficulte {
+  background: rgba(183,140,50,0.12);
+  border: 1px solid rgba(183,140,50,0.3);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--de-gold);
+  margin: 6px 0 8px;
+  text-align: center;
+}
+
+/* Résultats */
+.de-combat-resultat {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.de-combat-resultat:last-child { margin-bottom: 0; }
+
+.de-combat-res-ico {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.de-combat-res-normal {
+  background: rgba(80, 160, 80, 0.15);
+  border: 1px solid rgba(80,160,80,0.3);
+  color: var(--de-ink);
+}
+
+.de-combat-res-victoire {
+  background: rgba(183,140,50,0.18);
+  border: 1px solid rgba(183,140,50,0.45);
+  color: var(--de-gold);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FICHES ITEMS
+   ══════════════════════════════════════════════════════════════ */
+
+.de-item-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--de-parchment);
+  color: var(--de-ink);
+}
+
+/* ── En-tête item ─────────────────────────────────────────── */
+.de-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 10px;
+  background: linear-gradient(160deg, #f5edda 0%, #eddfc4 60%, #e0d0ae 100%);
+  border-bottom: 3px double var(--de-gold);
+}
+
+.de-item-avatar-wrap {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+}
+
+.de-item-avatar {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 2px solid var(--de-gold);
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(139,105,20,0.35);
+  transition: filter 0.2s;
+  display: block;
+}
+
+.de-item-avatar-wrap:hover .de-item-avatar {
+  filter: brightness(0.75);
+}
+
+.de-item-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.de-item-name {
+  font-family: var(--de-font-deco);
+  font-size: 22px;
+  color: var(--de-ink);
+  background: rgba(255,255,255,0.25) !important;
+  border: none !important;
+  border-bottom: 2px solid var(--de-gold) !important;
+  width: 100%;
+  padding: 2px 6px;
+}
+
+.de-item-type-badge select,
+.de-item-select {
+  font-family: var(--de-font-title);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--de-ink-brown);
+  background: rgba(255,255,255,0.2);
+  border: 1px solid var(--de-gold-light);
+  border-radius: 3px;
+  padding: 2px 6px;
+}
+
+.de-item-type-badge-fixed {
+  font-family: var(--de-font-title);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--de-ink-brown);
+}
+
+/* ── Corps item ───────────────────────────────────────────── */
+.de-item-body {
+  flex: 1;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* ── Stats item ───────────────────────────────────────────── */
+.de-item-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(139,105,20,0.06);
+  border: 1px solid var(--de-gold-light);
+  border-radius: 5px;
+}
+
+.de-item-stats-center {
+  justify-content: center;
+}
+
+.de-item-stat-bloc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 80px;
+}
+
+.de-item-stat-bloc-wide {
+  min-width: 160px;
+  align-items: flex-start;
+}
+
+.de-item-stat-label {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--de-ink-brown);
+}
+
+.de-item-stat-val {
+  width: 56px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--de-ink);
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--de-gold-light);
+  border-radius: 3px;
+}
+
+.de-item-stat-val-lg {
+  width: 72px;
+  font-size: 28px;
+}
+
+/* ── Équipé (checkbox) ───────────────────────────────────── */
+.de-equip-toggle-bloc { justify-content: center; }
+
+.de-equip-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--de-font-title);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--de-ink-brown);
+  cursor: pointer;
+}
+
+.de-equip-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--de-gold);
+  cursor: pointer;
+}
+
+/* ── Champ texte item ─────────────────────────────────────── */
+.de-item-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.de-item-text-input {
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid var(--de-gold-light);
+  border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  color: var(--de-ink);
+}
+
+/* ── Description item ─────────────────────────────────────── */
+.de-item-description {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.de-item-desc-label {
+  font-family: var(--de-font-title);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--de-ink-brown);
+}
+
+.de-item-description .de-editor {
+  flex: 1;
+  min-height: 80px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--de-ink);
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.35);
+  border: 1px solid var(--de-gold-light);
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ONGLET ÉQUIPEMENT — Récapitulatif & Cartes
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Bandeau récapitulatif bonus actifs ───────────────────── */
+.de-equip-recap {
+  display: flex;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, rgba(139,105,20,0.1), rgba(60,30,10,0.08));
+  border: 1px solid var(--de-gold-light);
+  border-radius: 6px;
+}
+
+.de-equip-recap-bloc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.3);
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.de-equip-recap-actif {
+  background: rgba(44,100,44,0.12);
+  border-color: #3a8a3a;
+}
+
+.de-equip-recap-malus {
+  background: rgba(140,30,30,0.1);
+  border-color: #8b1a1a;
+}
+
+.de-equip-recap-ico {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.de-equip-recap-val {
+  font-family: var(--de-font-title);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--de-ink);
+}
+
+.de-equip-recap-bloc.de-equip-recap-actif .de-equip-recap-val {
+  color: #2a6e2a;
+}
+
+.de-equip-recap-bloc.de-equip-recap-malus .de-equip-recap-val {
+  color: #8b1a1a;
+}
+
+.de-equip-recap-lbl {
+  font-family: var(--de-font-title);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--de-ink-brown);
+  text-align: center;
+}
+
+/* ── Grille de cartes ─────────────────────────────────────── */
+.de-equip-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.de-equip-vide {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--de-ink-brown);
+  font-style: italic;
+  font-size: 12px;
+  padding: 16px 0;
+}
+
+/* ── Carte individuelle ───────────────────────────────────── */
+.de-equip-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.35);
+  border: 1px solid var(--de-gold-light);
+  border-radius: 7px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+}
+
+.de-equip-card:hover {
+  box-shadow: 0 2px 10px rgba(139,105,20,0.2);
+  border-color: var(--de-gold);
+}
+
+.de-equip-card-on {
+  border-color: #3a8a3a;
+  background: rgba(44,100,44,0.08);
+  box-shadow: 0 0 0 2px rgba(58,138,58,0.25);
+}
+
+.de-equip-card-on:hover {
+  border-color: #2a6e2a;
+  box-shadow: 0 2px 10px rgba(44,100,44,0.3);
+}
+
+/* ── Image + bouton toggle ────────────────────────────────── */
+.de-equip-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 110px;
+  background: rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.de-equip-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s;
+}
+
+.de-equip-card:hover .de-equip-card-img {
+  transform: scale(1.04);
+}
+
+.de-equip-card-toggle {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.de-equip-card-on .de-equip-card-toggle {
+  background: rgba(44,138,44,0.85);
+  border-color: #5c5;
+}
+
+.de-equip-card-toggle:hover {
+  background: rgba(139,105,20,0.85);
+}
+
+/* ── Corps de la carte ────────────────────────────────────── */
+.de-equip-card-body {
+  padding: 6px 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.de-equip-card-name {
+  font-family: var(--de-font-title);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--de-ink);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Badge de type ────────────────────────────────────────── */
+.de-equip-card-type {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(139,105,20,0.15);
+  color: var(--de-ink-brown);
+  width: fit-content;
+}
+
+.de-equip-type-arme     { background: rgba(139,26,26,0.15); color: #8b1a1a; }
+.de-equip-type-armure   { background: rgba(30,60,120,0.15); color: #1a3a6e; }
+.de-equip-type-bouclier { background: rgba(44,100,44,0.15); color: #2a5a2a; }
+.de-equip-type-divers   { background: rgba(139,105,20,0.15); color: #7a5a10; }
+
+/* ── Stats de l'objet ─────────────────────────────────────── */
+.de-equip-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  min-height: 20px;
+}
+
+.de-equip-stat {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.de-equip-stat-def {
+  background: rgba(44,100,44,0.15);
+  color: #2a5a2a;
+}
+
+.de-equip-stat-da {
+  background: rgba(139,26,26,0.15);
+  color: #8b1a1a;
+}
+
+.de-equip-stat-mv {
+  background: rgba(80,50,20,0.15);
+  color: #5a3a10;
+}
+
+/* ── Contrôles (edit/delete) ─────────────────────────────── */
+.de-equip-card-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 3px 6px 5px;
+  border-top: 1px solid rgba(139,105,20,0.12);
+}
+
+.de-equip-card-controls a {
+  font-size: 12px;
+  color: var(--de-ink-brown);
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.de-equip-card-controls a:hover { opacity: 1; }
+.de-equip-card-controls a.danger:hover { color: #c0392b; }
+
+/* ── Malédictions (fiche Héros) ─────────────────────────── */
+.de-malediction-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 4px;
+  border-bottom: 1px solid rgba(13, 8, 0, .15);
+}
+.de-malediction-force {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #4a0808;
+  color: #f5e6c0;
+  font-weight: 900;
+}
+.de-malediction-txt { flex: 1; min-width: 0; font-size: 12px; line-height: 1.3; }
+.de-malediction-btns { flex: none; display: flex; gap: 6px; font-size: 11px; }
+.de-malediction-btns a { cursor: pointer; text-decoration: underline dotted; }
+.de-inspiration-ligne {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8b5e00;
+}
+.de-inspiration-clear { display: block; margin: 2px auto 0; width: max-content; font-size: 10px; }
+
+.de-divin-pnj { color: #7a5020; font-style: italic; }
+
+/* ══ En-têtes sombres (Dieu, PNJ) : texte clair ══════════════ */
+.dieux-ennemis.sheet.dieu .de-actor-name,
+.dieux-ennemis.sheet.pnj .de-actor-name {
+  color: #f5e6c0 !important;
+  background: rgba(255, 255, 255, .06) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+}
+.dieux-ennemis.sheet.dieu .de-actor-name:focus,
+.dieux-ennemis.sheet.pnj .de-actor-name:focus { background: rgba(255, 255, 255, .12) !important; }
+.dieux-ennemis.sheet.dieu .de-actor-name::placeholder,
+.dieux-ennemis.sheet.pnj .de-actor-name::placeholder { color: rgba(245, 230, 192, .4); }
+.dieux-ennemis.sheet.dieu .de-header label,
+.dieux-ennemis.sheet.pnj .de-header label,
+.dieux-ennemis.sheet.dieu .de-meta-item,
+.dieux-ennemis.sheet.pnj .de-meta-item,
+.dieux-ennemis.sheet.pnj .de-header .de-meta-item span {
+  color: #d9b8f0 !important;
+  font-size: 11px;
+}
+.dieux-ennemis.sheet.pnj .de-meta-item,
+.dieux-ennemis.sheet.pnj .de-header label { color: #e0d890 !important; }
+.dieux-ennemis.sheet.dieu .de-header select,
+.dieux-ennemis.sheet.pnj .de-header select,
+.dieux-ennemis.sheet.dieu .de-header input[type="number"],
+.dieux-ennemis.sheet.pnj .de-header input[type="number"] {
+  color: #f5c842 !important;
+  background: rgba(255, 255, 255, .06) !important;
+  border: none !important;
+  border-bottom: 1px solid #9b59b6 !important;
+  font-size: 14px !important;
+  height: auto !important;
+  padding: 3px 6px !important;
+}
+.dieux-ennemis.sheet.pnj .de-header select,
+.dieux-ennemis.sheet.pnj .de-header input[type="number"] { border-bottom-color: #6e6e1a !important; }
+.dieux-ennemis.sheet.dieu .de-header select option,
+.dieux-ennemis.sheet.pnj .de-header select option { color: #1a0a00; background: #f5edda; }
+
+/* ══ Fiche Dieu : Divinité ═══════════════════════════════════ */
+.dieux-ennemis.sheet.dieu .de-divinite-display { font-size: 40px !important; min-width: 80px; }
+.dieux-ennemis.sheet.dieu .de-divinite-btn { width: 34px !important; height: 34px !important; font-size: 20px !important; }
+
+/* ══ Fiche Dieu : Actions divines ════════════════════════════ */
+.dieux-ennemis.sheet.dieu .de-divin-scenario,
+.dieux-ennemis.sheet.dieu .de-divin-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1.5px solid #8b5e2a;
+  background: linear-gradient(160deg, #1e0c02 0%, #3a1a06 100%);
+  color: #f5e6c0;
+  font-family: var(--de-font-title, "Palatino Linotype", Georgia, serif);
+  text-align: center;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+.dieux-ennemis.sheet.dieu .de-divin-scenario:hover,
+.dieux-ennemis.sheet.dieu .de-divin-btn:hover {
+  border-color: #e09030;
+  background: linear-gradient(160deg, #2e1406 0%, #5a2a0a 100%);
+}
+.dieux-ennemis.sheet.dieu .de-divin-scenario:active,
+.dieux-ennemis.sheet.dieu .de-divin-btn:active { transform: translateY(1px); }
+
+/* Bouton large « Nouveau scénario » */
+.dieux-ennemis.sheet.dieu .de-divin-scenario {
+  width: 100%;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border-color: #c09030;
+  background: linear-gradient(160deg, #3a1a06 0%, #6a3a0a 100%);
+}
+.dieux-ennemis.sheet.dieu .de-divin-scenario i { font-size: 22px; color: #f5c842; }
+.dieux-ennemis.sheet.dieu .de-divin-scenario span {
+  font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+}
+.dieux-ennemis.sheet.dieu .de-divin-scenario small {
+  margin-left: auto; font-size: 12px; color: #f5c842;
+  border: 1px solid rgba(245, 200, 66, .5); border-radius: 10px; padding: 1px 8px;
+}
+
+/* Grille 3 × 2 des autres actions */
+.dieux-ennemis.sheet.dieu .de-divin-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.dieux-ennemis.sheet.dieu .de-divin-btn {
+  flex-direction: column;
+  gap: 4px;
+  min-height: 84px;
+  padding: 10px 6px;
+}
+.dieux-ennemis.sheet.dieu .de-divin-btn i { font-size: 26px; color: #f5c842; line-height: 1; }
+.dieux-ennemis.sheet.dieu .de-divin-btn span {
+  font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.1;
+}
+.dieux-ennemis.sheet.dieu .de-divin-btn small { font-size: 10px; color: #b89060; line-height: 1.1; }
+
+/* ══ Fiche Dieu : héros qui vénèrent ═════════════════════════ */
+.dieux-ennemis.sheet.dieu .de-venerant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 4px;
+  border-bottom: 1px solid rgba(13, 8, 0, .12);
+}
+.dieux-ennemis.sheet.dieu .de-venerant:last-child { border-bottom: none; }
+.dieux-ennemis.sheet.dieu .de-venerant img {
+  width: 32px; height: 32px; object-fit: cover; border-radius: 50%;
+  border: 1.5px solid #8b5e2a; flex: none;
+}
+.dieux-ennemis.sheet.dieu .de-venerant-nom { flex: 1; min-width: 0; font-size: 14px; font-weight: 700; color: #1a0a00; }
+.dieux-ennemis.sheet.dieu .de-venerant-nom small { font-weight: normal; font-style: italic; color: #7a5020; }
+.dieux-ennemis.sheet.dieu .de-venerant-pnj { opacity: .6; }
+.dieux-ennemis.sheet.dieu .de-venerant-rang {
+  font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  color: #f5e6c0; background: #4a0808; border-radius: 10px; padding: 2px 8px;
+}
+.dieux-ennemis.sheet.dieu .de-venerant-dev {
+  flex: none; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: #1a0a2e; color: #f5c842; font-weight: 900; font-size: 16px;
+  border: 1.5px solid #9b59b6;
+}
+.dieux-ennemis.sheet.dieu .de-venerant-vide { text-align: center; font-style: italic; font-size: 12px; color: #7a5020; }
+
+/* Aperçu de coût dans les fenêtres divines */
+.de-divin .de-divin-cout {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  background: #f6e3c4;
+  border-left: 3px solid #8b1a1a;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #1a0a00;
+}
+
+/* ══ Fiche PNJ (Premier / Second rôle, Figurant) — 0.2.4 ═════ */
+.dieux-ennemis.sheet.pnj .de-pnj-body { display: flex; flex-direction: column; gap: 10px; padding: 10px; }
+.dieux-ennemis.sheet.pnj .de-pnj-body .de-section { margin: 0; }
+.dieux-ennemis.sheet.pnj .de-header-actions { border-top-color: rgba(224, 216, 144, .25); }
+
+.dieux-ennemis.sheet.pnj .de-pnj-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-stat {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  min-height: 86px; padding: 8px 6px;
+  background: linear-gradient(160deg, #1e0c02, #3a1a06);
+  border: 1.5px solid #8b5e2a; border-radius: 6px; text-align: center;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-stat-lbl {
+  font-family: var(--de-font-title); font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: #a07840; line-height: 1.2;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-stat-val { font-size: 32px; font-weight: 900; line-height: 1; color: #f5c842; }
+.dieux-ennemis.sheet.pnj .de-pnj-stat-sub { font-size: 10px; color: #b89060; }
+.dieux-ennemis.sheet.pnj .de-pnj-stat-seuil { border-color: #c05010; }
+.dieux-ennemis.sheet.pnj .de-pnj-stat-seuil .de-pnj-stat-val { color: #ff8040; }
+.dieux-ennemis.sheet.pnj .de-pnj-stat-input {
+  width: 64px !important; height: 40px !important; text-align: center;
+  font-size: 26px !important; font-weight: 900; color: #f5c842 !important;
+  background: rgba(255, 255, 255, .06) !important; border: none !important;
+  border-bottom: 2px solid #8b5e2a !important; border-radius: 3px;
+}
+
+.dieux-ennemis.sheet.pnj .de-blessures-row { flex-wrap: wrap; justify-content: center; gap: 8px; }
+.dieux-ennemis.sheet.pnj .blessure-case { width: 34px; height: 34px; }
+
+.dieux-ennemis.sheet.pnj .de-pnj-devotions {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-dev {
+  display: flex; align-items: center; gap: 8px; padding: 4px 6px;
+  background: rgba(255, 255, 255, .35); border: 1px solid rgba(160, 110, 40, .35); border-radius: 4px;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-dev-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.15; }
+.dieux-ennemis.sheet.pnj .de-pnj-dev-nom { font-family: var(--de-font-title); font-size: 12px; font-weight: 700; color: #1a0a00; }
+.dieux-ennemis.sheet.pnj .de-pnj-dev-txt small { font-size: 10px; color: #7a5020; }
+.dieux-ennemis.sheet.pnj .de-pnj-dev input {
+  width: 42px !important; height: 30px !important; flex: none; text-align: center;
+  font-size: 18px !important; font-weight: 900; color: #1a0a00 !important;
+  background: #fdf8ec !important; border: 1.5px solid #a07840 !important; border-radius: 4px;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-dev-roll {
+  all: unset; box-sizing: border-box; flex: none; cursor: pointer;
+  width: 30px; height: 30px; display: flex !important; align-items: center; justify-content: center;
+  border-radius: 4px; background: linear-gradient(180deg, #6b1a1a, #3d0a0a); border: 1px solid #c0702a;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-dev-roll i { color: #f5c842; font-size: 15px; }
+.dieux-ennemis.sheet.pnj .de-pnj-dev-roll:hover { background: linear-gradient(180deg, #8b2a2a, #5a1010); }
+
+.dieux-ennemis.sheet.pnj .de-pnj-item {
+  display: flex; align-items: center; gap: 8px; padding: 4px 2px;
+  border-bottom: 1px solid rgba(13, 8, 0, .12); opacity: .65;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-item.de-pnj-item-on,
+.dieux-ennemis.sheet.pnj .de-pnj-item:has(.de-pnj-tag-hist) { opacity: 1; }
+.dieux-ennemis.sheet.pnj .de-pnj-item img { width: 28px; height: 28px; object-fit: contain; border: none; flex: none; }
+.dieux-ennemis.sheet.pnj .de-pnj-item-nom { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; color: #1a0a00; }
+.dieux-ennemis.sheet.pnj .de-pnj-item-tag {
+  font-size: 11px; padding: 1px 6px; border-radius: 8px; background: #f6e3c4; border: 1px solid #c0a060; color: #4a1800;
+}
+.dieux-ennemis.sheet.pnj .de-pnj-tag-hist { background: #4a0808; color: #f5e6c0; border-color: #4a0808; }
+.dieux-ennemis.sheet.pnj .de-pnj-item a { cursor: pointer; color: #5c3a1e; }
+.dieux-ennemis.sheet.pnj .de-pnj-item-on .equip-toggle i { color: #2e6e3e; }
+.dieux-ennemis.sheet.pnj .de-pnj-vide { text-align: center; font-style: italic; font-size: 12px; color: #7a5020; margin: 4px 0; }
+
+/* ══ Bénédictions (fiche Héros) — 0.3.0 ══════════════════════ */
+.de-bened-row {
+  display: flex; align-items: center; gap: 8px; padding: 5px 2px;
+  border-bottom: 1px solid rgba(13, 8, 0, .12);
+}
+.de-bened-row:last-child { border-bottom: none; }
+.de-bened-row img { width: 30px; height: 30px; object-fit: contain; border: none; flex: none; }
+.de-bened-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; }
+.de-bened-nom { font-weight: 700; font-size: 13px; color: #1a0a00; }
+.de-bened-txt small { font-size: 10px; color: #7a5020; }
+.de-bened-epuise { opacity: .55; }
+.de-bened-invoquer {
+  all: unset; box-sizing: border-box; flex: none; cursor: pointer;
+  display: inline-flex !important; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase; color: #f5e6c0;
+  background: linear-gradient(180deg, #6b1a1a, #3d0a0a); border: 1px solid #c0702a;
+}
+.de-bened-invoquer i { color: #f5c842; }
+.de-bened-invoquer:hover { background: linear-gradient(180deg, #8b2a2a, #5a1010); }
+.de-bened-invoquer[disabled] { cursor: not-allowed; filter: grayscale(.8); }
+.de-bened-vide { text-align: center; font-style: italic; font-size: 12px; color: #7a5020; margin: 4px 0; }
+.de-chat-benediction { padding: 4px 12px; font-size: 13px; }
+.de-chat-benediction p { margin: 4px 0; }
+
+/* Éditeur de texte riche des fiches d'objets */
+.dieux-ennemis.sheet.item prose-mirror.de-editor { display: block; min-height: 120px; }
+
+/* Liens « ＋ Ajouter » lisibles sur les bandeaux de titre sombres */
+.de-section-title .de-btn-sm {
+  color: #f5c842 !important;
+  border-color: rgba(245, 200, 66, .5) !important;
+  cursor: pointer;
+}
+.de-section-title .de-btn-sm:hover { background: rgba(245, 200, 66, .15) !important; }

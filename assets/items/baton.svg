@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#2a1f14"/>
+  <!-- Staff shadow -->
+  <line x1="53" y1="8" x2="47" y2="92" stroke="#1a0f08" stroke-width="9" stroke-linecap="round"/>
+  <!-- Main staff body -->
+  <line x1="50" y1="8" x2="44" y2="92" stroke="#8b6030" stroke-width="7" stroke-linecap="round"/>
+  <!-- Wood grain highlight -->
+  <line x1="49" y1="10" x2="43" y2="88" stroke="#a07840" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- Wood grain shadow -->
+  <line x1="51" y1="12" x2="46" y2="86" stroke="#6a4820" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <!-- Crossguard / wrap near top -->
+  <rect x="38" y="24" width="20" height="6" rx="3" fill="#c09040"/>
+  <!-- Wrap cord detail -->
+  <line x1="39" y1="26" x2="57" y2="26" stroke="#a07030" stroke-width="1.5"/>
+  <line x1="39" y1="28" x2="57" y2="28" stroke="#a07030" stroke-width="1.5"/>
+  <!-- Worn tip at bottom -->
+  <ellipse cx="43" cy="91" rx="5" ry="3" fill="#5a3818"/>
+  <!-- Worn metal tip cap -->
+  <ellipse cx="43" cy="93" rx="4" ry="2" fill="#808070"/>
+  <!-- Knot in wood -->
+  <ellipse cx="47" cy="55" rx="3" ry="2" fill="#6a4020" transform="rotate(-10 47 55)"/>
+  <!-- Another subtle knot -->
+  <ellipse cx="46" cy="72" rx="2" ry="1.5" fill="#6a4020" transform="rotate(-8 46 72)"/>
+</svg>

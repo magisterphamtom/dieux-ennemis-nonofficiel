@@ -1,0 +1,14 @@
+{
+ "_id": "bYHmIztdCWVwGHcr",
+ "_key": "!items!bYHmIztdCWVwGHcr",
+ "name": "Malédiction — Champs de Bataille",
+ "type": "malediction",
+ "folder": "IBU4xVKpkvhYYWq1",
+ "img": "systems/dieux-ennemis-nonofficiel/assets/maledictions/malediction-champs-de-bataille.svg",
+ "system": {
+  "dieuSource": "champs-de-bataille",
+  "force": 1,
+  "malusDes": 1,
+  "effet": "<p>1 dé de pénalité pour les actions du domaine Champs de Bataille.</p><p><em>Réglez la force sur le nombre de succès obtenus par le dieu.</em></p>"
+ }
+}

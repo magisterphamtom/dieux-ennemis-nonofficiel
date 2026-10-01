@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#2a1f14"/>
+  <!-- House body (stone facade) -->
+  <rect x="15" y="48" width="70" height="45" rx="2" fill="#7a7060"/>
+  <!-- Stone texture -->
+  <line x1="15" y1="58" x2="85" y2="58" stroke="#6a6050" stroke-width="1"/>
+  <line x1="15" y1="68" x2="85" y2="68" stroke="#6a6050" stroke-width="1"/>
+  <line x1="15" y1="78" x2="85" y2="78" stroke="#6a6050" stroke-width="1"/>
+  <line x1="35" y1="48" x2="35" y2="93" stroke="#6a6050" stroke-width="0.8"/>
+  <line x1="55" y1="48" x2="55" y2="93" stroke="#6a6050" stroke-width="0.8"/>
+  <line x1="75" y1="48" x2="75" y2="93" stroke="#6a6050" stroke-width="0.8"/>
+  <!-- Roof -->
+  <polygon points="10,48 90,48 72,22 28,22" fill="#4a3020"/>
+  <!-- Chimney -->
+  <rect x="62" y="10" width="10" height="22" rx="1" fill="#5a4030"/>
+  <!-- Chimney smoke -->
+  <ellipse cx="67" cy="8" rx="4" ry="3" fill="#888070" opacity="0.6"/>
+  <!-- Door -->
+  <rect x="38" y="68" width="18" height="25" rx="2" fill="#4a3010"/>
+  <!-- Door knob -->
+  <circle cx="54" cy="80" r="2" fill="#c0a040"/>
+  <!-- Door arch -->
+  <path d="M38 68 Q47 58 56 68" fill="#3a2808" stroke="#3a2808" stroke-width="1"/>
+  <!-- Window left -->
+  <rect x="20" y="56" width="14" height="14" rx="2" fill="#90b8d0"/>
+  <line x1="27" y1="56" x2="27" y2="70" stroke="#6a8890" stroke-width="1"/>
+  <line x1="20" y1="63" x2="34" y2="63" stroke="#6a8890" stroke-width="1"/>
+  <!-- Window right -->
+  <rect x="62" y="56" width="14" height="14" rx="2" fill="#90b8d0"/>
+  <line x1="69" y1="56" x2="69" y2="70" stroke="#6a8890" stroke-width="1"/>
+  <line x1="62" y1="63" x2="76" y2="63" stroke="#6a8890" stroke-width="1"/>
+</svg>

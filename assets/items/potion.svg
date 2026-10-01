@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a0e2a"/>
+  <!-- fiole -->
+  <path d="M42,20 L42,38 Q28,46 26,62 Q24,80 50,84 Q76,80 74,62 Q72,46 58,38 L58,20 Z" fill="#3a6a3a" stroke="#5a9a5a" stroke-width="1.2"/>
+  <!-- col -->
+  <rect x="40" y="14" width="20" height="10" rx="3" fill="#2a4a2a" stroke="#5a9a5a" stroke-width="1"/>
+  <!-- bouchon -->
+  <rect x="43" y="10" width="14" height="6" rx="2" fill="#8a5a20"/>
+  <!-- bulles -->
+  <circle cx="42" cy="65" r="3" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="55" cy="72" r="2" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="48" cy="78" r="2.5" fill="rgba(255,255,255,0.15)"/>
+  <!-- reflet -->
+  <path d="M32,55 Q30,68 34,75" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/>
+</svg>

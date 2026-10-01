@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#2a1a0e"/>
+  <!-- chope -->
+  <path d="M28,28 L32,82 L68,82 L72,28 Z" fill="#8a6a20" stroke="#c0a030" stroke-width="1.2"/>
+  <!-- anse -->
+  <path d="M72,36 Q86,36 86,54 Q86,72 72,72" stroke="#8a6a20" stroke-width="5" fill="none"/>
+  <path d="M72,36 Q82,36 82,54 Q82,70 72,70" stroke="#a08030" stroke-width="2" fill="none"/>
+  <!-- mousse -->
+  <path d="M28,28 Q32,18 50,16 Q68,18 72,28" fill="#e0e0c0" stroke="#c0c0a0" stroke-width="0.8"/>
+  <circle cx="38" cy="20" r="5" fill="#f0f0d8"/>
+  <circle cx="50" cy="16" r="6" fill="#f0f0d8"/>
+  <circle cx="62" cy="20" r="5" fill="#f0f0d8"/>
+  <!-- bière -->
+  <rect x="30" y="30" width="40" height="50" rx="1" fill="#c07820" opacity="0.5"/>
+  <!-- reflet -->
+  <path d="M32,34 L32,78" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
+</svg>

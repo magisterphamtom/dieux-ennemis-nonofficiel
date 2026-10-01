@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#2a1a0e"/>
+  <!-- besace -->
+  <path d="M24,34 Q24,24 50,22 Q76,24 76,34 L72,78 Q72,86 50,88 Q28,86 28,78 Z" fill="#6a5028" stroke="#9a7840" stroke-width="1.2"/>
+  <!-- rabat -->
+  <path d="M24,34 Q24,24 50,22 Q76,24 76,34 Q76,44 50,46 Q24,44 24,34 Z" fill="#5a4018" stroke="#9a7840" stroke-width="1"/>
+  <!-- fermoir -->
+  <rect x="42" y="38" width="16" height="8" rx="2" fill="#8a6820" stroke="#c8a030" stroke-width="1"/>
+  <rect x="46" y="40" width="8" height="4" rx="1" fill="#c8a030"/>
+  <!-- contenu visible -->
+  <circle cx="36" cy="62" r="5" fill="#8a4a20"/>
+  <circle cx="50" cy="58" r="6" fill="#9a5828"/>
+  <circle cx="64" cy="62" r="5" fill="#7a8a40"/>
+  <!-- ficelle -->
+  <path d="M24,34 L10,28" stroke="#8a6828" stroke-width="2"/>
+  <path d="M76,34 L90,28" stroke="#8a6828" stroke-width="2"/>
+  <path d="M10,28 L90,28" stroke="#8a6828" stroke-width="2"/>
+</svg>

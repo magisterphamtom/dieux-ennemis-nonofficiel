@@ -1,0 +1,68 @@
+{{!-- ================================================================
+     FICHE ÉQUIPEMENT — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap de-item-sheet">
+
+  {{!-- ── EN-TÊTE ────────────────────────────────────────────── --}}
+  <header class="de-item-header">
+    <div class="de-item-avatar-wrap">
+      <img class="de-item-avatar" src="{{item.img}}" title="Cliquer pour changer l'image">
+    </div>
+    <div class="de-item-header-info">
+      <input class="de-item-name" type="text" name="name" value="{{item.name}}" placeholder="Nom de l'équipement"/>
+      <div class="de-item-type-badge">
+        <select name="system.typeEquip">
+          <option value="arme"     {{#ifEq system.typeEquip "arme"}}selected{{/ifEq}}>⚔️ Arme</option>
+          <option value="armure"   {{#ifEq system.typeEquip "armure"}}selected{{/ifEq}}>🛡️ Armure</option>
+          <option value="bouclier" {{#ifEq system.typeEquip "bouclier"}}selected{{/ifEq}}>🔰 Bouclier</option>
+          <option value="divers"   {{#ifEq system.typeEquip "divers"}}selected{{/ifEq}}>🎒 Divers</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  {{!-- ── STATS ──────────────────────────────────────────────── --}}
+  <div class="de-item-body">
+
+    <div class="de-item-stats">
+
+      {{!-- Équipé --}}
+      <div class="de-item-stat-bloc de-equip-toggle-bloc">
+        <label class="de-equip-label">
+          <input type="checkbox" name="system.equipe" {{#if system.equipe}}checked{{/if}}>
+          <span>Équipé</span>
+        </label>
+      </div>
+
+      {{!-- Dés-avantages --}}
+      <div class="de-item-stat-bloc">
+        <div class="de-item-stat-label">Dés-avantages</div>
+        <input class="de-item-stat-val" type="number" name="system.desAvantages"
+               value="{{system.desAvantages}}" min="0" placeholder="0"/>
+      </div>
+
+      {{!-- Bonus défensif --}}
+      <div class="de-item-stat-bloc">
+        <div class="de-item-stat-label">Bonus défensif</div>
+        <input class="de-item-stat-val" type="number" name="system.bonusDefensif"
+               value="{{system.bonusDefensif}}" min="0" placeholder="0"/>
+      </div>
+
+      {{!-- Malus mouvement --}}
+      <div class="de-item-stat-bloc">
+        <div class="de-item-stat-label">Malus mouvement</div>
+        <input class="de-item-stat-val" type="number" name="system.malusMouvement"
+               value="{{system.malusMouvement}}" min="0" placeholder="0"/>
+      </div>
+
+    </div>
+
+    {{!-- Description --}}
+    <div class="de-item-description">
+      <div class="de-item-desc-label">Description / Prix</div>
+      <prose-mirror class="de-editor" name="system.description" value="{{system.description}}" toggled>{{{texteEnrichi}}}</prose-mirror>
+    </div>
+
+  </div>
+
+</div>

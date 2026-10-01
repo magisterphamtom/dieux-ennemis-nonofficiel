@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.zip
+# Fichiers générés par LevelDB / Foundry
+packs/**/LOG
+packs/**/LOG.old
+packs/**/LOCK
+packs/**/lost/

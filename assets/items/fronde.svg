@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#2a2010"/>
+  <!-- lanières -->
+  <path d="M30,80 Q35,60 50,50 Q65,60 70,80" stroke="#8a6a40" stroke-width="2" fill="none"/>
+  <path d="M50,50 Q50,35 50,20" stroke="#8a6a40" stroke-width="1.5" fill="none"/>
+  <!-- poche -->
+  <ellipse cx="50" cy="52" rx="8" ry="5" fill="#6a4a2a" stroke="#8a6a40" stroke-width="0.8"/>
+  <!-- projectile -->
+  <circle cx="50" cy="52" r="3" fill="#909090"/>
+  <!-- poignée -->
+  <rect x="26" y="78" width="8" height="10" rx="3" fill="#5c3a1e"/>
+  <rect x="66" y="78" width="8" height="10" rx="3" fill="#5c3a1e"/>
+</svg>

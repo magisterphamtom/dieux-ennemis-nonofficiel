@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#2a1f14"/>
+  <!-- Body -->
+  <ellipse cx="48" cy="62" rx="26" ry="17" fill="#8b6343"/>
+  <!-- Head -->
+  <circle cx="72" cy="48" r="14" fill="#8b6343"/>
+  <!-- Snout -->
+  <ellipse cx="80" cy="53" rx="8" ry="6" fill="#7a5535"/>
+  <!-- Nose -->
+  <ellipse cx="83" cy="50" rx="3" ry="2" fill="#2a1410"/>
+  <!-- Eye -->
+  <circle cx="74" cy="44" r="3" fill="#1a1008"/>
+  <circle cx="75" cy="43" r="1" fill="white" opacity="0.7"/>
+  <!-- Ear -->
+  <ellipse cx="65" cy="38" rx="7" ry="10" fill="#6a4a28" transform="rotate(-15 65 38)"/>
+  <!-- Tail up -->
+  <path d="M22 55 Q10 40 18 28 Q22 20 26 30" stroke="#8b6343" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Front leg -->
+  <rect x="58" y="74" width="8" height="16" rx="4" fill="#8b6343"/>
+  <rect x="70" y="74" width="8" height="16" rx="4" fill="#8b6343"/>
+  <!-- Back leg -->
+  <rect x="30" y="74" width="8" height="16" rx="4" fill="#8b6343"/>
+  <rect x="40" y="74" width="8" height="16" rx="4" fill="#8b6343"/>
+</svg>

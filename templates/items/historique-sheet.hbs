@@ -1,0 +1,33 @@
+{{!-- ================================================================
+     FICHE HISTORIQUE — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap de-item-sheet">
+
+  <header class="de-item-header">
+    <div class="de-item-avatar-wrap">
+      <img class="de-item-avatar" src="{{item.img}}" title="Cliquer pour changer l'image">
+    </div>
+    <div class="de-item-header-info">
+      <input class="de-item-name" type="text" name="name" value="{{item.name}}" placeholder="Nom de l'historique"/>
+      <div class="de-item-type-badge-fixed">📜 Historique</div>
+    </div>
+  </header>
+
+  <div class="de-item-body">
+
+    <div class="de-item-stats de-item-stats-center">
+      <div class="de-item-stat-bloc">
+        <div class="de-item-stat-label">Valeur (dés)</div>
+        <input class="de-item-stat-val de-item-stat-val-lg" type="number" name="system.valeur"
+               value="{{system.valeur}}" min="1" max="10"/>
+      </div>
+    </div>
+
+    <div class="de-item-description">
+      <div class="de-item-desc-label">Description</div>
+      <prose-mirror class="de-editor" name="system.description" value="{{system.description}}" toggled>{{{texteEnrichi}}}</prose-mirror>
+    </div>
+
+  </div>
+
+</div>

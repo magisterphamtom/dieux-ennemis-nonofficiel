@@ -1,0 +1,32 @@
+name: Publier une version
+
+# Se déclenche quand une release est publiée sur GitHub (tag vX.Y.Z)
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Mettre à jour la version et le lien de téléchargement
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          DOWNLOAD="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/dieux-ennemis-nonofficiel.zip"
+          jq --arg v "$VERSION" --arg d "$DOWNLOAD" '.version = $v | .download = $d' system.json > tmp.json
+          mv tmp.json system.json
+
+      - name: Créer dieux-ennemis-nonofficiel.zip
+        run: zip -r dieux-ennemis-nonofficiel.zip . -x ".git/*" ".github/*" "node_modules/*" "build/*" "package.json" "package-lock.json" "*.zip"
+
+      - name: Joindre les fichiers à la release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            system.json
+            dieux-ennemis-nonofficiel.zip

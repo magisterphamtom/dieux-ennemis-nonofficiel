@@ -1,0 +1,14 @@
+{
+ "_id": "X0qD17ufoc9DUCK0",
+ "_key": "!items!X0qD17ufoc9DUCK0",
+ "name": "Malédiction — Amour",
+ "type": "malediction",
+ "folder": "IBU4xVKpkvhYYWq1",
+ "img": "systems/dieux-ennemis-nonofficiel/assets/maledictions/malediction-amour.svg",
+ "system": {
+  "dieuSource": "amour",
+  "force": 1,
+  "malusDes": 1,
+  "effet": "<p>1 dé de pénalité pour les actions du domaine Amour.</p><p><em>Réglez la force sur le nombre de succès obtenus par le dieu.</em></p>"
+ }
+}

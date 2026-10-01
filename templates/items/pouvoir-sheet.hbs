@@ -1,0 +1,49 @@
+{{!-- ================================================================
+     FICHE POUVOIR DIVIN — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap de-item-sheet">
+
+  <header class="de-item-header">
+    <div class="de-item-avatar-wrap">
+      <img class="de-item-avatar" src="{{item.img}}" title="Cliquer pour changer l'image">
+    </div>
+    <div class="de-item-header-info">
+      <input class="de-item-name" type="text" name="name" value="{{item.name}}" placeholder="Nom du pouvoir"/>
+      <div class="de-item-type-badge-fixed">⚡ Pouvoir Divin</div>
+    </div>
+  </header>
+
+  <div class="de-item-body">
+
+    <div class="de-item-stats">
+
+      {{!-- Coût en Divinité --}}
+      <div class="de-item-stat-bloc">
+        <div class="de-item-stat-label">Coût Divinité</div>
+        <input class="de-item-stat-val de-item-stat-val-lg" type="number" name="system.coutDivinite"
+               value="{{system.coutDivinite}}" min="0"/>
+      </div>
+
+      {{!-- Domaine --}}
+      <div class="de-item-stat-bloc de-item-stat-bloc-wide">
+        <div class="de-item-stat-label">Domaine</div>
+        <select name="system.domaine" class="de-item-select">
+          <option value="">— Universel —</option>
+          {{#each gods as |g|}}
+            <option value="{{g.id}}" {{#ifEq ../system.domaine g.id}}selected{{/ifEq}}>
+              {{g.name}} ({{g.domaine}})
+            </option>
+          {{/each}}
+        </select>
+      </div>
+
+    </div>
+
+    <div class="de-item-description">
+      <div class="de-item-desc-label">Effet</div>
+      <prose-mirror class="de-editor" name="system.effet" value="{{system.effet}}" toggled>{{{texteEnrichi}}}</prose-mirror>
+    </div>
+
+  </div>
+
+</div>

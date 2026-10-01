@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#2a1f14"/>
+  <!-- Warm glow -->
+  <ellipse cx="50" cy="68" rx="30" ry="18" fill="#e08020" opacity="0.2"/>
+  <!-- Pot body (ceramic jar) -->
+  <path d="M22 60 Q20 88 50 88 Q80 88 78 60 Z" fill="#8a6040"/>
+  <!-- Pot rim band -->
+  <rect x="22" y="56" width="56" height="8" rx="4" fill="#a07050"/>
+  <!-- Salve/ointment inside (honey colored) -->
+  <ellipse cx="50" cy="60" rx="24" ry="8" fill="#d4901a"/>
+  <!-- Salve texture/shine -->
+  <ellipse cx="44" cy="58" rx="7" ry="3" fill="#f0c040" opacity="0.6"/>
+  <!-- Lid -->
+  <ellipse cx="50" cy="46" rx="26" ry="10" fill="#7a5030"/>
+  <!-- Lid top dome -->
+  <ellipse cx="50" cy="42" rx="22" ry="8" fill="#8a6040"/>
+  <!-- Lid knob -->
+  <ellipse cx="50" cy="34" rx="6" ry="5" fill="#a07050"/>
+  <ellipse cx="50" cy="32" rx="4" ry="3" fill="#c09060"/>
+  <!-- Decorative band on pot -->
+  <path d="M22 72 Q50 76 78 72" stroke="#c08040" stroke-width="2" fill="none"/>
+  <!-- Warmth sparkles -->
+  <circle cx="30" cy="50" r="1.5" fill="#f0c040" opacity="0.7"/>
+  <circle cx="70" cy="50" r="1.5" fill="#f0c040" opacity="0.7"/>
+  <circle cx="25" cy="60" r="1" fill="#f0c040" opacity="0.5"/>
+  <circle cx="75" cy="60" r="1" fill="#f0c040" opacity="0.5"/>
+</svg>

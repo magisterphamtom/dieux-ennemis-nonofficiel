@@ -1,0 +1,624 @@
+{{!-- ================================================================
+     FICHE HÉROS — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap">
+
+  {{!-- ── EN-TÊTE ────────────────────────────────────────────────── --}}
+  <header class="de-header">
+    <div class="de-header-top">
+
+      {{!-- Portrait cliquable pour changer l'image --}}
+      <div class="de-avatar-wrap">
+        <img class="de-avatar" src="{{actor.img}}" title="Cliquer pour changer l'image" data-edit="img">
+        <div class="de-avatar-hint"><i class="fas fa-camera"></i></div>
+      </div>
+
+      {{!-- Nom + Dieu patron --}}
+      <div class="de-header-info">
+        <input class="de-actor-name" type="text" name="name" value="{{actor.name}}" placeholder="Nom du héros"/>
+
+        <div class="de-patron-wrap">
+          <span class="de-patron-label">
+            <i class="fas fa-ankh"></i> DIEU PATRON
+          </span>
+          <select class="de-patron-select" name="system.dieuPatron" data-action="inline-edit" data-field="system.dieuPatron">
+            <option value="">— Choisir un dieu patron —</option>
+            {{#each gods as |g|}}
+              <option value="{{g.id}}" {{#ifEq ../system.dieuPatron g.id}}selected{{/ifEq}}>
+                {{g.name}} — {{g.domaine}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+
+      {{!-- Hubris avec tooltip --}}
+      <div class="de-hubris">
+        <div class="de-hubris-label">
+          ◆ HUBRIS ◆
+          <span class="de-hubris-tooltip" title="L'Hubris mesure l'orgueil du héros envers les dieux. Plus il augmente, plus le héros attire la colère divine. Le Niveau indique son degré d'arrogance (0 = humble, 10 = démesuré). L'Expérience suit sa progression dans cette voie périlleuse.">
+            <i class="fas fa-question-circle"></i>
+          </span>
+        </div>
+        <div class="de-hubris-bloc">
+          <div class="de-hubris-stat">
+            <span class="de-hubris-stat-label">NIVEAU</span>
+            <input type="number" name="system.hubrisNiveau" value="{{system.hubrisNiveau}}" min="0" max="10"/>
+          </div>
+          <div class="de-hubris-sep">◆</div>
+          <div class="de-hubris-stat">
+            <span class="de-hubris-stat-label">EXPÉRIENCE</span>
+            <input type="number" name="system.hubrisExp" value="{{system.hubrisExp}}" min="0"/>
+          </div>
+        </div>
+        <button type="button" class="de-roll-btn roll-hubris" title="Compter sur ses propres talents plutôt que sur les dieux">
+          Lancer l'Hubris
+        </button>
+      </div>
+
+    </div>
+    {{#if editable}}
+    <div class="de-header-actions">
+      <button type="button" class="de-btn-action btn-roll-attaque">
+        <i class="fas fa-sword"></i> Attaque
+      </button>
+      <button type="button" class="de-btn-action btn-roll-initiative">
+        <i class="fas fa-running"></i> Initiative
+      </button>
+    </div>
+    {{/if}}
+  </header>
+
+  {{!-- ── ONGLETS ────────────────────────────────────────────────── --}}
+  <nav class="de-tabs tabs" data-tabs="primary">
+    <a class="item active" data-tab="principal">⚔ Principal</a>
+    <a class="item" data-tab="devotions">☩ Dévotions</a>
+    <a class="item" data-tab="equipement">🗡 Équipement</a>
+    <a class="item" data-tab="ecran">📋 Écran</a>
+    <a class="item" data-tab="notes">📜 Notes</a>
+  </nav>
+
+  {{!-- ── CORPS ──────────────────────────────────────────────────── --}}
+  <div class="sheet-body">
+
+    {{!-- ═══════════════════════════════════════════════
+         ONGLET PRINCIPAL
+    ═══════════════════════════════════════════════ --}}
+    <section class="sheet-tab tab active" data-tab="principal">
+
+      <div class="de-grid-2">
+
+        {{!-- ── BLESSURES ──────────────────────────────── --}}
+        <div class="de-section">
+          <h3 class="de-section-title">
+            Blessures
+            <span class="de-section-title-deco">{{system.blessures.value}} / {{system.blessures.max}}</span>
+          </h3>
+          <div class="de-section-body">
+            <div class="de-blessures-wrap">
+              <div class="de-blessures-row">
+                {{#each blessuresArr}}
+                  {{#if (lt @index 5)}}
+                    <div class="blessure-case {{#if filled}}filled{{/if}}" data-idx="{{idx}}" title="Blessure {{add idx 1}}"></div>
+                  {{/if}}
+                {{/each}}
+              </div>
+              <div class="de-blessures-row">
+                {{#each blessuresArr}}
+                  {{#if (gt @index 4)}}
+                    <div class="blessure-case {{#if filled}}filled{{/if}}" data-idx="{{idx}}" title="Blessure {{add idx 1}}"></div>
+                  {{/if}}
+                {{/each}}
+              </div>
+            </div>
+            {{#if seuilDefaite}}
+            <div style="text-align:center;margin-top:8px;">
+              <span class="de-seuil-badge">Seuil de défaite <span class="de-seuil-val">{{seuilDefaite}}</span></span>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- ── DÉS-AVANTAGES & RESSOURCES ────────────── --}}
+        <div>
+          <div class="de-section" style="margin-bottom:8px;">
+            <h3 class="de-section-title">Dés-Avantages</h3>
+            <div class="de-section-body">
+              <div class="de-desav-wrap">
+                <span class="de-desav-label" title="Gagnés par les attaques réussies, perdus au premier échec ou en changeant de cible">Acquis en combat :</span>
+                <input class="de-desav-val" type="number" name="system.desAvantages" value="{{system.desAvantages}}" min="0"/>
+              </div>
+              {{#each inspirations as |ins|}}
+              <div class="de-inspiration-ligne" title="S'ajoute automatiquement au prochain jet">
+                ✦ Inspiration de {{ins.dieuNom}} : +{{ins.des}}
+              </div>
+              {{/each}}
+              {{#if inspirations.length}}<a class="de-inspiration-clear de-btn-sm" title="Retirer les inspirations en attente">✕ retirer</a>{{/if}}
+              {{#if bonusDésAvEquip}}
+              <div style="text-align:center;font-size:10px;color:var(--de-ink-brown);">
+                + {{bonusDésAvEquip}} des armes équipées (permanents)
+              </div>
+              {{/if}}
+            </div>
+          </div>
+
+          <div class="de-section">
+            <h3 class="de-section-title">Richesses</h3>
+            <div class="de-section-body">
+              <div class="de-ressources">
+                <div class="de-ressource de-trajs">
+                  <span class="de-ressource-label">Monnaie</span>
+                  <input type="number" name="system.trajs" value="{{system.trajs}}" min="0"/>
+                </div>
+                <div class="de-ressource de-pieces">
+                  <span class="de-ressource-label">Petite monnaie</span>
+                  <input type="number" name="system.piecePercees" value="{{system.piecePercees}}" min="0"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>{{!-- /de-grid-2 --}}
+
+      {{!-- ── MOMENTS-CLÉS ──────────────────────────────── --}}
+      <div class="de-section">
+        <h3 class="de-section-title">Moments-Clés</h3>
+        <div class="de-section-body">
+          <textarea name="system.momentsCles" rows="4" class="de-editor-field">{{system.momentsCles}}</textarea>
+        </div>
+      </div>
+
+      {{!-- ── TRAITS ──────────────────────────────────────── --}}
+      <div class="de-grid-2">
+        <div class="de-section">
+          <h3 class="de-section-title">Répartie</h3>
+          <div class="de-section-body">
+            <input class="de-trait-input" type="text" name="system.repartie"
+              value="{{system.repartie}}" placeholder="Une phrase courte et percutante…"/>
+          </div>
+        </div>
+        <div class="de-section">
+          <h3 class="de-section-title">Faiblesse Héroïque</h3>
+          <div class="de-section-body">
+            <input class="de-trait-input" type="text" name="system.faiblesseHeroique"
+              value="{{system.faiblesseHeroique}}" placeholder="La faille qui définit le héros…"/>
+          </div>
+        </div>
+      </div>
+
+      {{!-- ── HISTORIQUES ──────────────────────────────────── --}}
+      <div class="de-section">
+        <h3 class="de-section-title">
+          Historiques
+          <a class="de-btn-sm item-create" data-type="historique" title="Ajouter">＋ Ajouter</a>
+        </h3>
+        <div class="de-section-body">
+          <div class="de-historiques-list">
+            {{#each historiques as |hist|}}
+            <div class="de-historique-row" data-item-id="{{hist.id}}">
+              <span class="de-historique-val">{{hist.system.valeur}}d</span>
+              <span class="de-historique-name">{{hist.name}}</span>
+              <div class="de-item-controls">
+                <a class="item-to-chat" title="Poster"><i class="fas fa-comment"></i></a>
+                <a class="item-edit" title="Modifier"><i class="fas fa-edit"></i></a>
+                <a class="item-delete danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+              </div>
+            </div>
+            {{else}}
+            <p style="color:var(--de-ink-brown);font-style:italic;font-size:12px;text-align:center;padding:8px 0;">
+              Aucun historique. Cliquez sur ＋ pour en ajouter.
+            </p>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+
+      {{!-- ── BÉNÉDICTIONS ─────────────────────────────────── --}}
+      <div class="de-section">
+        <h3 class="de-section-title">
+          Bénédictions
+          <a class="de-btn-sm item-create" data-type="benediction" title="Créer une bénédiction">＋ Ajouter</a>
+        </h3>
+        <div class="de-section-body">
+          {{#each benedictionsVue as |b|}}
+          <div class="de-bened-row {{#if b.epuise}}de-bened-epuise{{/if}}" data-item-id="{{b.id}}">
+            <img src="{{b.img}}" alt="">
+            <div class="de-bened-txt">
+              <span class="de-bened-nom">{{b.name}}</span>
+              <small>{{b.dieuNom}}{{#if b.permanente}} · permanente{{else}}{{#if b.aLimite}} · {{b.utilise}}/{{b.limite}} ce scénario{{/if}}{{/if}}</small>
+            </div>
+            {{#unless b.permanente}}
+            <button type="button" class="de-bened-invoquer" title="Invoquer la bénédiction" {{#if b.epuise}}disabled{{/if}}>
+              <i class="fas fa-hands-praying"></i> Invoquer
+            </button>
+            {{/unless}}
+            <div class="de-item-controls">
+              <a class="item-edit" title="Voir / modifier"><i class="fas fa-edit"></i></a>
+              <a class="item-delete danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+            </div>
+          </div>
+          {{else}}
+          <p class="de-bened-vide">Aucune bénédiction. Glisse-en une depuis le compendium « Bénédictions ».</p>
+          {{/each}}
+        </div>
+      </div>
+
+    </section>
+
+    {{!-- ═══════════════════════════════════════════════
+         ONGLET DÉVOTIONS
+    ═══════════════════════════════════════════════ --}}
+    <section class="sheet-tab tab" data-tab="devotions">
+
+      <div style="text-align:center;margin-bottom:10px;">
+        <button class="de-btn btn-roll-dialog">
+          <i class="fas fa-dice-d6"></i> Lancer des dés
+        </button>
+      </div>
+
+      <div class="de-section">
+        <h3 class="de-section-title">Table des Dévotions</h3>
+        <div class="de-section-body" style="padding:0;">
+          <table class="de-devotions-table">
+            <thead>
+              <tr>
+                <th>Dieu</th>
+                <th>Domaine</th>
+                <th style="width:52px;">Dés</th>
+                <th style="width:60px;">Difficulté</th>
+                <th style="width:70px;">Lancer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each gods as |god|}}
+              <tr>
+                <td class="de-god-name">{{god.name}}</td>
+                <td class="de-god-domain">{{god.domaine}}</td>
+                <td>
+                  <input class="de-devotion-val" type="number"
+                    name="system.devotions.{{god.id}}"
+                    value="{{lookup ../system.devotions god.id}}"
+                    min="0" max="10"/>
+                </td>
+                <td style="text-align:center;">
+                  {{#ifEq god.id "champs-de-bataille"}}
+                    <span class="de-seuil-inline">⚠ {{../seuilDefaite}}</span>
+                  {{else}}
+                    <span style="color:var(--de-ink-brown);font-size:11px;">—</span>
+                  {{/ifEq}}
+                </td>
+                <td>
+                  <button type="button" class="de-roll-btn roll-devotion" data-god="{{god.id}}"
+                    title="Lancer {{lookup ../system.devotions god.id}}d6">
+                    Lancer
+                  </button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    {{!-- ═══════════════════════════════════════════════
+         ONGLET ÉQUIPEMENT
+    ═══════════════════════════════════════════════ --}}
+    <section class="sheet-tab tab" data-tab="equipement">
+
+      {{!-- ── RÉCAPITULATIF DES BONUS ACTIFS ─────────────── --}}
+      <div class="de-equip-recap">
+        <div class="de-equip-recap-bloc {{#if bonusDefensif}}de-equip-recap-actif{{/if}}">
+          <div class="de-equip-recap-ico">🛡</div>
+          <div class="de-equip-recap-val">+{{bonusDefensif}}</div>
+          <div class="de-equip-recap-lbl">Défense</div>
+        </div>
+        <div class="de-equip-recap-bloc {{#if bonusDésAvEquip}}de-equip-recap-malus{{/if}}">
+          <div class="de-equip-recap-ico">⚠</div>
+          <div class="de-equip-recap-val">{{bonusDésAvEquip}}</div>
+          <div class="de-equip-recap-lbl">Dés-Av. équip.</div>
+        </div>
+        <div class="de-equip-recap-bloc {{#if malusMouvement}}de-equip-recap-malus{{/if}}">
+          <div class="de-equip-recap-ico">🦶</div>
+          <div class="de-equip-recap-val">{{malusMouvement}}</div>
+          <div class="de-equip-recap-lbl">Malus mvt</div>
+        </div>
+      </div>
+
+      {{!-- ── LISTE D'ÉQUIPEMENT EN CARTES ────────────────── --}}
+      <div class="de-section">
+        <h3 class="de-section-title">
+          Inventaire
+          <a class="de-btn-sm item-create" data-type="equipment">＋ Ajouter</a>
+        </h3>
+        <div class="de-section-body" style="padding:6px 8px;">
+          <div class="de-equip-cards">
+
+            {{#each equipements as |equip|}}
+            <div class="de-equip-card {{#if equip.system.equipe}}de-equip-card-on{{/if}}" data-item-id="{{equip.id}}">
+
+              {{!-- Image + toggle équipé --}}
+              <div class="de-equip-card-img-wrap">
+                <img class="de-equip-card-img" src="{{equip.img}}" title="{{equip.name}}">
+                <button type="button" class="de-equip-card-toggle equip-toggle"
+                        title="{{#if equip.system.equipe}}Déséquiper{{else}}Équiper{{/if}}">
+                  {{#if equip.system.equipe}}✓{{else}}○{{/if}}
+                </button>
+              </div>
+
+              {{!-- Infos --}}
+              <div class="de-equip-card-body">
+                <div class="de-equip-card-name">{{equip.name}}</div>
+
+                {{!-- Badge type --}}
+                <div class="de-equip-card-type de-equip-type-{{equip.system.typeEquip}}">
+                  {{#ifEq equip.system.typeEquip "arme"}}⚔ Arme{{/ifEq}}
+                  {{#ifEq equip.system.typeEquip "armure"}}🔰 Armure{{/ifEq}}
+                  {{#ifEq equip.system.typeEquip "bouclier"}}🛡 Bouclier{{/ifEq}}
+                  {{#ifEq equip.system.typeEquip "divers"}}📦 Divers{{/ifEq}}
+                </div>
+
+                {{!-- Bonus / malus de l'objet --}}
+                <div class="de-equip-card-stats">
+                  {{#if equip.system.bonusDefensif}}
+                  <span class="de-equip-stat de-equip-stat-def" title="Bonus défensif">
+                    🛡 +{{equip.system.bonusDefensif}}
+                  </span>
+                  {{/if}}
+                  {{#if equip.system.desAvantages}}
+                  <span class="de-equip-stat de-equip-stat-da" title="Dés-avantages (dés en plus en attaque)">
+                    ⚔ +{{equip.system.desAvantages}} dés-av.
+                  </span>
+                  {{/if}}
+                  {{#if equip.system.malusMouvement}}
+                  <span class="de-equip-stat de-equip-stat-mv" title="Malus de mouvement">
+                    🦶 −{{equip.system.malusMouvement}} mvt
+                  </span>
+                  {{/if}}
+                </div>
+              </div>
+
+              {{!-- Contrôles --}}
+              <div class="de-equip-card-controls">
+                <a class="item-edit" title="Modifier"><i class="fas fa-edit"></i></a>
+                <a class="item-delete danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+              </div>
+
+            </div>
+            {{else}}
+            <p class="de-equip-vide">
+              Aucun équipement. Cliquez sur <strong>＋ Ajouter</strong> ou glissez un objet depuis un compendium.
+            </p>
+            {{/each}}
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    {{!-- ═══════════════════════════════════════════════
+         ONGLET ÉCRAN
+    ═══════════════════════════════════════════════ --}}
+    <section class="sheet-tab tab" data-tab="ecran">
+
+      <div class="de-ecran-grid">
+
+        {{!-- ── DIFFICULTÉS ──────────────────────────────── --}}
+        <div class="de-section de-ecran-section">
+          <h3 class="de-section-title">Les Risques — Difficultés</h3>
+          <div class="de-section-body" style="padding:0;">
+            <table class="de-ecran-table">
+              <thead>
+                <tr>
+                  <th>Risque</th>
+                  <th>Difficulté (succès requis)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Facile</td><td class="de-diff-val">1</td></tr>
+                <tr><td>Normal</td><td class="de-diff-val">2</td></tr>
+                <tr class="de-diff-hard"><td>Difficile</td><td class="de-diff-val">3</td></tr>
+                <tr class="de-diff-hard"><td>Extrême</td><td class="de-diff-val">4</td></tr>
+                <tr class="de-diff-myth"><td>Mythique</td><td class="de-diff-val">8</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {{!-- ── RÉSULTATS DES DÉS ─────────────────────────── --}}
+        <div class="de-section de-ecran-section">
+          <h3 class="de-section-title">Résultats des Dés</h3>
+          <div class="de-section-body">
+            <div class="de-des-resultats">
+              <div class="de-de-row">
+                <div class="de-des-groupe de-des-echec">
+                  {{!-- Dés 1, 2, 3 = échec --}}
+                  <svg class="de-de-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="36" height="36" rx="6" fill="#5a1010" stroke="#8b1a1a" stroke-width="2"/>
+                    <circle cx="20" cy="20" r="4" fill="#d44"/>
+                    <text x="20" y="14" text-anchor="middle" font-size="9" fill="#d44" font-family="serif">1</text>
+                  </svg>
+                  <svg class="de-de-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="36" height="36" rx="6" fill="#5a1010" stroke="#8b1a1a" stroke-width="2"/>
+                    <circle cx="12" cy="14" r="3.5" fill="#d44"/><circle cx="28" cy="26" r="3.5" fill="#d44"/>
+                    <text x="20" y="14" text-anchor="middle" font-size="9" fill="#d44" font-family="serif">2</text>
+                  </svg>
+                  <svg class="de-de-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="36" height="36" rx="6" fill="#5a1010" stroke="#8b1a1a" stroke-width="2"/>
+                    <circle cx="12" cy="14" r="3.5" fill="#d44"/><circle cx="20" cy="20" r="3.5" fill="#d44"/><circle cx="28" cy="26" r="3.5" fill="#d44"/>
+                    <text x="20" y="14" text-anchor="middle" font-size="9" fill="#d44" font-family="serif">3</text>
+                  </svg>
+                  <span class="de-des-label de-echec-label">✗ Échec</span>
+                </div>
+              </div>
+              <div class="de-de-row">
+                <div class="de-des-groupe de-des-succes">
+                  {{!-- Dés 4, 5, 6 = succès --}}
+                  <svg class="de-de-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="36" height="36" rx="6" fill="#1a3a1a" stroke="#2a6e2a" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="3.5" fill="#5c5"/><circle cx="28" cy="12" r="3.5" fill="#5c5"/>
+                    <circle cx="12" cy="28" r="3.5" fill="#5c5"/><circle cx="28" cy="28" r="3.5" fill="#5c5"/>
+                    <text x="20" y="14" text-anchor="middle" font-size="9" fill="#5c5" font-family="serif">4</text>
+                  </svg>
+                  <svg class="de-de-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="36" height="36" rx="6" fill="#1a3a1a" stroke="#2a6e2a" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="3.5" fill="#5c5"/><circle cx="28" cy="12" r="3.5" fill="#5c5"/>
+                    <circle cx="20" cy="20" r="3.5" fill="#5c5"/>
+                    <circle cx="12" cy="28" r="3.5" fill="#5c5"/><circle cx="28" cy="28" r="3.5" fill="#5c5"/>
+                    <text x="20" y="14" text-anchor="middle" font-size="9" fill="#5c5" font-family="serif">5</text>
+                  </svg>
+                  <svg class="de-de-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="36" height="36" rx="6" fill="#1a3a1a" stroke="#2a6e2a" stroke-width="2"/>
+                    <circle cx="12" cy="10" r="3.5" fill="#5c5"/><circle cx="28" cy="10" r="3.5" fill="#5c5"/>
+                    <circle cx="12" cy="20" r="3.5" fill="#5c5"/><circle cx="28" cy="20" r="3.5" fill="#5c5"/>
+                    <circle cx="12" cy="30" r="3.5" fill="#5c5"/><circle cx="28" cy="30" r="3.5" fill="#5c5"/>
+                    <text x="20" y="14" text-anchor="middle" font-size="9" fill="#5c5" font-family="serif">6</text>
+                  </svg>
+                  <span class="de-des-label de-succes-label">✓ Succès</span>
+                </div>
+              </div>
+              <div class="de-des-regle">
+                Un dé affichant <strong>4, 5 ou 6</strong> = 1 succès.<br>
+                Un dé affichant <strong>1, 2 ou 3</strong> = échec.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- ── TEST & RÉSOLUTION ────────────────────────── --}}
+        <div class="de-section de-ecran-section de-ecran-large">
+          <h3 class="de-section-title">Test</h3>
+          <div class="de-section-body de-test-layout">
+            <div class="de-ecran-formule">
+              <div class="de-formule-titre">Dévotion appropriée</div>
+              <div class="de-formule-ligne">+ Historique approprié</div>
+              <div class="de-formule-ligne">+ Dés-avantages</div>
+              <div class="de-formule-ou">— ou —</div>
+              <div class="de-formule-ligne"><strong>Hubris</strong> + Historique + Dés-avantages</div>
+            </div>
+            <div class="de-ecran-oppositions">
+              <div class="de-ecran-oppositions-titre">Oppositions</div>
+              <p class="de-ecran-oppo-ligne">Plus de réussites que son adversaire → <strong>succès modéré</strong></p>
+              <p class="de-ecran-oppo-ligne">Au moins le double des réussites → <strong>succès complet</strong></p>
+            </div>
+          </div>
+        </div>
+
+        {{!-- ── COMBAT ──────────────────────────────────── --}}
+        <div class="de-section de-ecran-section de-ecran-large de-combat-section">
+          <h3 class="de-section-title">⚔ Le Combat</h3>
+          <div class="de-section-body de-combat-body">
+
+            {{!-- Colonne gauche --}}
+            <div class="de-combat-col">
+
+              <div class="de-combat-bloc de-combat-phases">
+                <div class="de-combat-bloc-titre">📋 Phases du tour</div>
+                <div class="de-combat-phase-row">
+                  <span class="de-combat-num">1</span>
+                  <span class="de-combat-phase-nom">Initiative</span>
+                </div>
+                <div class="de-combat-phase-row">
+                  <span class="de-combat-num">2</span>
+                  <span class="de-combat-phase-nom">Action</span>
+                </div>
+                <div class="de-combat-phase-row">
+                  <span class="de-combat-num">3</span>
+                  <span class="de-combat-phase-nom">Résolution</span>
+                </div>
+              </div>
+
+              <div class="de-combat-bloc">
+                <div class="de-combat-bloc-titre">🎲 Initiative</div>
+                <p class="de-combat-texte">Test de <strong>Dévotion Champs de bataille</strong>.</p>
+                <p class="de-combat-texte">Rang d'action par réussites décroissantes. Égalités départagées par la Dévotion elle-même.</p>
+              </div>
+
+            </div>
+
+            {{!-- Colonne centrale : Blessures --}}
+            <div class="de-combat-col de-combat-col-blessures">
+              <div class="de-combat-bloc de-combat-blessures de-combat-blessures-center">
+                <div class="de-combat-bloc-titre">💀 Blessures</div>
+                <div class="de-combat-blessure-max">10 blessures = <strong>KO</strong></div>
+                <p class="de-combat-texte">−1 blessure / jour de repos complet</p>
+              </div>
+            </div>
+
+            {{!-- Colonne droite --}}
+            <div class="de-combat-col">
+
+              <div class="de-combat-bloc">
+                <div class="de-combat-bloc-titre">⚡ Héros vs. Figurants</div>
+                <p class="de-combat-texte"><strong>1 figurant à tapis</strong> par réussite de l'action.</p>
+              </div>
+
+              <div class="de-combat-bloc">
+                <div class="de-combat-bloc-titre">🗡 Héros vs. Premiers rôles</div>
+                <p class="de-combat-texte">Test de <strong>Dévotion Champs de bataille</strong>.</p>
+                <div class="de-combat-difficulte">
+                  Difficulté = Dévotion adverse + bonus défensif
+                </div>
+                <div class="de-combat-resultat de-combat-res-normal">
+                  <span class="de-combat-res-ico">✓</span>
+                  <span>1 blessure + 1 dés-avantage pour l'attaquant</span>
+                </div>
+                <div class="de-combat-resultat de-combat-res-victoire">
+                  <span class="de-combat-res-ico">★</span>
+                  <span>Réussites ≥ défense + <strong>5</strong> → <strong>combat remporté</strong></span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>{{!-- /de-ecran-grid --}}
+
+    </section>
+
+    {{!-- ═══════════════════════════════════════════════
+         ONGLET NOTES
+    ═══════════════════════════════════════════════ --}}
+    <section class="sheet-tab tab" data-tab="notes">
+
+      <div class="de-section">
+        <h3 class="de-section-title">Malédictions</h3>
+        <div class="de-section-body">
+          {{#each maledictionsVue as |m|}}
+          <div class="de-malediction-row" data-item-id="{{m.id}}">
+            <span class="de-malediction-force" title="Force de la malédiction">{{m.force}}</span>
+            <div class="de-malediction-txt">
+              <strong>{{m.name}}</strong> <small>({{m.dieuNom}}{{#if m.malusDes}}, −{{m.malusDes}} dé{{/if}})</small>
+            </div>
+            <div class="de-malediction-btns">
+              <a data-malediction="xp" title="Dépenser 1 point d'expérience de fin de scénario : −1 de force">−1 XP</a>
+              <a data-malediction="hubris" title="Sacrifier 1 point d'Hubris : −1 de force">−1 Hubris</a>
+              <a class="item-edit" title="Voir / modifier"><i class="fas fa-edit"></i></a>
+              <a class="item-delete danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+            </div>
+          </div>
+          {{else}}
+          <p style="color:var(--de-ink-brown);font-style:italic;font-size:12px;text-align:center;padding:4px 0;">Aucune malédiction.</p>
+          {{/each}}
+          <div style="font-size:11px;color:var(--de-ink-brown);margin:6px 0 2px;">Notes libres :</div>
+          <textarea name="system.maledictions" rows="3" class="de-editor-field">{{system.maledictions}}</textarea>
+        </div>
+      </div>
+
+      <div class="de-section">
+        <h3 class="de-section-title">Notes & Journal</h3>
+        <div class="de-section-body">
+          <textarea name="system.notes" rows="6" class="de-editor-field">{{system.notes}}</textarea>
+        </div>
+      </div>
+
+    </section>
+
+  </div>{{!-- /sheet-body --}}
+</div>{{!-- /de-sheet-wrap --}}

@@ -1,0 +1,52 @@
+{{!-- ================================================================
+     FICHE MALÉDICTION — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap de-item-sheet">
+
+  <header class="de-item-header">
+    <div class="de-item-avatar-wrap">
+      <img class="de-item-avatar" src="{{item.img}}" title="Cliquer pour changer l'image">
+    </div>
+    <div class="de-item-header-info">
+      <input class="de-item-name" type="text" name="name" value="{{item.name}}" placeholder="Nom de la malédiction"/>
+      <div class="de-item-type-badge-fixed">☠ Malédiction</div>
+    </div>
+  </header>
+
+  <div class="de-item-body">
+
+    <div class="de-item-stats">
+      <div class="de-item-stat-bloc de-item-stat-bloc-wide">
+        <div class="de-item-stat-label">Dieu qui maudit</div>
+        <select name="system.dieuSource" class="de-item-select">
+          <option value="">— Aucun —</option>
+          <optgroup label="Les Sept">
+          {{#each gods as |g|}}
+            <option value="{{g.id}}" {{#ifEq ../system.dieuSource g.id}}selected{{/ifEq}}>{{g.name}} — {{g.domaine}}</option>
+          {{/each}}
+          </optgroup>
+          <optgroup label="Dieux déchus">
+          {{#each dechus as |g|}}
+            <option value="{{g.id}}" {{#ifEq ../system.dieuSource g.id}}selected{{/ifEq}}>{{g.name}} — {{g.domaine}}</option>
+          {{/each}}
+          </optgroup>
+        </select>
+      </div>
+      <div class="de-item-stat-bloc" title="Nombre de succès du dieu. Baisse de 1 par point d'expérience ou d'Hubris sacrifié ; disparaît à 0.">
+        <div class="de-item-stat-label">Force</div>
+        <input class="de-item-stat-val" type="number" name="system.force" value="{{system.force}}" min="0"/>
+      </div>
+      <div class="de-item-stat-bloc" title="Dés retirés aux actions du domaine du dieu (0 si la malédiction prend une autre forme)">
+        <div class="de-item-stat-label">Dés de pénalité</div>
+        <input class="de-item-stat-val" type="number" name="system.malusDes" value="{{system.malusDes}}" min="0"/>
+      </div>
+    </div>
+
+    <div class="de-item-description">
+      <div class="de-item-desc-label">Effet</div>
+      <prose-mirror class="de-editor" name="system.effet" value="{{system.effet}}" toggled>{{{texteEnrichi}}}</prose-mirror>
+    </div>
+
+  </div>
+
+</div>

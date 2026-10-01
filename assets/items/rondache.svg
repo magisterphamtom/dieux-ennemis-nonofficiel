@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a1a1a"/>
+  <!-- rondache circulaire -->
+  <circle cx="50" cy="50" r="36" fill="#5a4a30" stroke="#8a7040" stroke-width="1.5"/>
+  <circle cx="50" cy="50" r="32" fill="#4a3a20" stroke="#7a6030" stroke-width="0.8"/>
+  <!-- cercles concentriques -->
+  <circle cx="50" cy="50" r="22" fill="none" stroke="#8a7040" stroke-width="1"/>
+  <circle cx="50" cy="50" r="12" fill="none" stroke="#8a7040" stroke-width="1"/>
+  <!-- bombé -->
+  <circle cx="50" cy="50" r="7" fill="#9a8040" stroke="#c8a020" stroke-width="1"/>
+  <circle cx="50" cy="50" r="3" fill="#c8a020"/>
+</svg>

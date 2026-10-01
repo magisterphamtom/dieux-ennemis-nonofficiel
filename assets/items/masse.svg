@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#2a1a0e"/>
+  <!-- manche -->
+  <rect x="47" y="42" width="6" height="48" rx="3" fill="#5c3a1e"/>
+  <!-- tête -->
+  <ellipse cx="50" cy="36" rx="14" ry="10" fill="#808880" stroke="#a0a090" stroke-width="0.8"/>
+  <!-- pointes -->
+  <polygon points="50,24 52,30 48,30" fill="#909890"/>
+  <polygon points="64,34 58,36 60,32" fill="#909890"/>
+  <polygon points="36,34 42,36 40,32" fill="#909890"/>
+  <polygon points="50,48 52,42 48,42" fill="#909890"/>
+</svg>

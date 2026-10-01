@@ -1,0 +1,37 @@
+<div class="de-wiki-layout">
+
+  {{!-- ── Sidebar navigation ── --}}
+  <nav class="de-wiki-sidebar">
+    <ul>
+      {{#each entries as |e i|}}
+      <li class="de-wiki-nav-item {{#if (eq i ../current)}}active{{/if}}"
+          data-action="navEntry" data-entry="{{i}}">
+        {{e.name}}
+      </li>
+      {{/each}}
+    </ul>
+  </nav>
+
+  {{!-- ── Zone principale ── --}}
+  <div class="de-wiki-main">
+
+    {{!-- Onglets de pages (si plusieurs) --}}
+    {{#if (gt pages.length 1)}}
+    <div class="de-wiki-tabs">
+      {{#each pages as |p i|}}
+      <button type="button"
+              class="de-wiki-tab {{#if (eq i ../pageIdx)}}active{{/if}}"
+              data-action="navPage" data-page="{{i}}">
+        {{p.name}}
+      </button>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{!-- Contenu de la page --}}
+    <div class="de-wiki-content">
+      {{{content}}}
+    </div>
+
+  </div>
+</div>

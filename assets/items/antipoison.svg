@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#2a1f14"/>
+  <!-- Glow behind flask -->
+  <ellipse cx="50" cy="62" rx="28" ry="24" fill="#00bb44" opacity="0.2"/>
+  <!-- Flask body -->
+  <path d="M36 50 Q30 60 28 72 Q26 88 50 88 Q74 88 72 72 Q70 60 64 50 Z" fill="#1a6030"/>
+  <!-- Flask liquid (bright green) -->
+  <path d="M36 64 Q30 72 28 80 Q26 88 50 88 Q74 88 72 80 Q70 72 64 64 Z" fill="#22dd66"/>
+  <!-- Liquid shine -->
+  <ellipse cx="44" cy="76" rx="6" ry="4" fill="#88ffaa" opacity="0.5"/>
+  <!-- Flask neck -->
+  <rect x="40" y="34" width="20" height="20" rx="4" fill="#1a6030"/>
+  <!-- Flask top rim -->
+  <rect x="38" y="30" width="24" height="8" rx="4" fill="#228840"/>
+  <!-- Cork -->
+  <rect x="43" y="22" width="14" height="10" rx="3" fill="#c8a850"/>
+  <!-- Cross symbol on flask -->
+  <rect x="46" y="56" width="8" height="22" rx="2" fill="#00ff66" opacity="0.9"/>
+  <rect x="38" y="64" width="24" height="8" rx="2" fill="#00ff66" opacity="0.9"/>
+  <!-- Sparkle/glow dots -->
+  <circle cx="22" cy="48" r="2" fill="#44ff88" opacity="0.7"/>
+  <circle cx="78" cy="45" r="2" fill="#44ff88" opacity="0.7"/>
+  <circle cx="20" cy="60" r="1.5" fill="#44ff88" opacity="0.5"/>
+  <circle cx="80" cy="63" r="1.5" fill="#44ff88" opacity="0.5"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#2a1f14"/>
+  <!-- Wooden handle shadow -->
+  <line x1="53" y1="40" x2="53" y2="95" stroke="#1a0f08" stroke-width="8" stroke-linecap="round"/>
+  <!-- Wooden handle -->
+  <line x1="50" y1="38" x2="50" y2="93" stroke="#8b6030" stroke-width="6" stroke-linecap="round"/>
+  <!-- Wood grain -->
+  <line x1="49" y1="40" x2="49" y2="90" stroke="#a07840" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <!-- Metal collar at tine junction -->
+  <rect x="40" y="38" width="20" height="7" rx="3" fill="#808090"/>
+  <!-- Left outer tine -->
+  <line x1="34" y1="44" x2="30" y2="10" stroke="#909098" stroke-width="5" stroke-linecap="round"/>
+  <!-- Center tine -->
+  <line x1="50" y1="44" x2="50" y2="8" stroke="#909098" stroke-width="5" stroke-linecap="round"/>
+  <!-- Right outer tine -->
+  <line x1="66" y1="44" x2="70" y2="10" stroke="#909098" stroke-width="5" stroke-linecap="round"/>
+  <!-- Tine tips (pointed) -->
+  <polygon points="28,10 30,6 32,10" fill="#c0c0b0"/>
+  <polygon points="48,8 50,4 52,8" fill="#c0c0b0"/>
+  <polygon points="68,10 70,6 72,10" fill="#c0c0b0"/>
+  <!-- Tine sheen -->
+  <line x1="33" y1="42" x2="29" y2="12" stroke="#b0b0c0" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <line x1="49" y1="42" x2="49" y2="10" stroke="#b0b0c0" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <line x1="65" y1="42" x2="69" y2="12" stroke="#b0b0c0" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <!-- Handle worn end -->
+  <ellipse cx="50" cy="93" rx="4" ry="2.5" fill="#5a3818"/>
+</svg>

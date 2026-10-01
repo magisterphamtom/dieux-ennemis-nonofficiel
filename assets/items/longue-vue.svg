@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a1a2e"/>
+  <!-- tubes télescopiques -->
+  <rect x="15" y="44" width="40" height="12" rx="4" fill="#8a6a20" stroke="#b08030" stroke-width="1"/>
+  <rect x="50" y="46" width="28" height="8" rx="3" fill="#7a5a18" stroke="#a07028" stroke-width="0.8"/>
+  <rect x="72" y="47" width="14" height="6" rx="2.5" fill="#6a4a10" stroke="#906020" stroke-width="0.8"/>
+  <!-- verre objectif -->
+  <ellipse cx="16" cy="50" rx="5" ry="7" fill="#2a4a6a" stroke="#5a8ab0" stroke-width="1"/>
+  <!-- verre oculaire -->
+  <ellipse cx="84" cy="50" rx="3" ry="4" fill="#1a3a5a" stroke="#4a7a9a" stroke-width="0.8"/>
+  <!-- bague de mise au point -->
+  <rect x="38" y="43" width="8" height="14" rx="3" fill="#6a5018" stroke="#c8a020" stroke-width="1"/>
+</svg>

@@ -1,0 +1,63 @@
+{{!-- ================================================================
+     FICHE BÉNÉDICTION — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap de-item-sheet">
+
+  <header class="de-item-header">
+    <div class="de-item-avatar-wrap">
+      <img class="de-item-avatar" src="{{item.img}}" title="Cliquer pour changer l'image">
+    </div>
+    <div class="de-item-header-info">
+      <input class="de-item-name" type="text" name="name" value="{{item.name}}" placeholder="Nom de la bénédiction"/>
+      <div class="de-item-type-badge-fixed">✨ Bénédiction</div>
+    </div>
+  </header>
+
+  <div class="de-item-body">
+
+    <div class="de-item-stats">
+
+      {{!-- Dieu source --}}
+      <div class="de-item-stat-bloc de-item-stat-bloc-wide">
+        <div class="de-item-stat-label">Dieu source</div>
+        <select name="system.dieuSource" class="de-item-select">
+          <option value="">— Aucun —</option>
+          <optgroup label="Les Sept">
+          {{#each gods as |g|}}
+            <option value="{{g.id}}" {{#ifEq ../system.dieuSource g.id}}selected{{/ifEq}}>{{g.name}} — {{g.domaine}}</option>
+          {{/each}}
+          </optgroup>
+          <optgroup label="Dieux déchus">
+          {{#each dechus as |g|}}
+            <option value="{{g.id}}" {{#ifEq ../system.dieuSource g.id}}selected{{/ifEq}}>{{g.name}} — {{g.domaine}}</option>
+          {{/each}}
+          </optgroup>
+        </select>
+      </div>
+
+      {{!-- Utilisée --}}
+      <div class="de-item-stat-bloc">
+        <label class="de-equip-label" title="Toujours active (vœux…) : ne compte pas dans la limite d'usage par scénario">
+          <input type="checkbox" name="system.permanente" {{#if system.permanente}}checked{{/if}}>
+          <span>Permanente</span>
+        </label>
+      </div>
+
+    </div>
+
+    {{!-- Conditions --}}
+    <div class="de-item-field">
+      <div class="de-item-desc-label">Conditions d'activation</div>
+      <input type="text" name="system.conditions" value="{{system.conditions}}"
+             class="de-item-text-input" placeholder="Ex : une fois par scénario, en combat…"/>
+    </div>
+
+    {{!-- Effet --}}
+    <div class="de-item-description">
+      <div class="de-item-desc-label">Effet</div>
+      <prose-mirror class="de-editor" name="system.effet" value="{{system.effet}}" toggled>{{{texteEnrichi}}}</prose-mirror>
+    </div>
+
+  </div>
+
+</div>

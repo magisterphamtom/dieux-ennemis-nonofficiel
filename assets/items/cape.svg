@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a1a1a"/>
+  <!-- cape -->
+  <path d="M30,18 Q50,14 70,18 L78,30 Q72,80 50,88 Q28,80 22,30 Z" fill="#4a2a60" stroke="#7a4a90" stroke-width="1"/>
+  <!-- col -->
+  <path d="M30,18 Q50,14 70,18 L66,26 Q50,22 34,26 Z" fill="#3a1a50"/>
+  <!-- agrafe -->
+  <circle cx="50" cy="22" r="4" fill="#c8a020" stroke="#e0c030" stroke-width="0.8"/>
+  <!-- reflet -->
+  <path d="M30,30 Q26,55 28,72" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+</svg>

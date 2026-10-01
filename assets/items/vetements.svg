@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a1a1a"/>
+  <!-- tunique -->
+  <path d="M30,20 L20,32 L32,36 L32,82 L68,82 L68,36 L80,32 L70,20 L60,26 Q50,22 40,26 Z" fill="#4a3a60" stroke="#6a5a80" stroke-width="1"/>
+  <!-- manches -->
+  <path d="M30,20 L20,32 L32,36 L32,26 Z" fill="#3a2a50"/>
+  <path d="M70,20 L80,32 L68,36 L68,26 Z" fill="#3a2a50"/>
+  <!-- col -->
+  <path d="M40,26 Q50,18 60,26 L58,30 Q50,24 42,30 Z" fill="#3a2a50"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#0e1a0e"/>
+  <!-- tiges -->
+  <line x1="50" y1="80" x2="50" y2="40" stroke="#4a7a20" stroke-width="2"/>
+  <line x1="50" y1="65" x2="35" y2="48" stroke="#4a7a20" stroke-width="1.5"/>
+  <line x1="50" y1="55" x2="65" y2="38" stroke="#4a7a20" stroke-width="1.5"/>
+  <line x1="50" y1="72" x2="68" y2="60" stroke="#4a7a20" stroke-width="1.5"/>
+  <!-- feuilles -->
+  <ellipse cx="35" cy="44" rx="8" ry="5" fill="#5a9a2a" transform="rotate(-30 35 44)"/>
+  <ellipse cx="65" cy="34" rx="8" ry="5" fill="#5a9a2a" transform="rotate(30 65 34)"/>
+  <ellipse cx="68" cy="57" rx="7" ry="4" fill="#4a8a20" transform="rotate(20 68 57)"/>
+  <ellipse cx="50" cy="36" rx="9" ry="6" fill="#6aaa30" transform="rotate(5 50 36)"/>
+  <!-- fleur -->
+  <circle cx="50" cy="30" r="5" fill="#d4a020"/>
+  <circle cx="50" cy="30" r="3" fill="#e8c040"/>
+  <!-- racines -->
+  <path d="M50,80 Q44,88 40,92 M50,80 Q50,90 50,94 M50,80 Q56,88 60,92" stroke="#4a3010" stroke-width="1.5" fill="none"/>
+</svg>

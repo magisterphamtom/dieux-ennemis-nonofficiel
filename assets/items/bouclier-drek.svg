@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#0e1a0e"/>
+  <!-- bouclier -->
+  <path d="M18,18 L82,18 L82,55 Q82,84 50,92 Q18,84 18,55 Z" fill="#3a3a40" stroke="#6a6a70" stroke-width="1.5"/>
+  <path d="M21,21 L79,21 L79,55 Q79,81 50,89 Q21,81 21,55 Z" fill="none" stroke="#8a8090" stroke-width="0.8"/>
+  <!-- motif runique -->
+  <line x1="50" y1="25" x2="50" y2="75" stroke="#c8a020" stroke-width="1.5"/>
+  <line x1="25" y1="45" x2="75" y2="45" stroke="#c8a020" stroke-width="1.5"/>
+  <path d="M50,25 L38,38 M50,25 L62,38" stroke="#c8a020" stroke-width="1.2"/>
+  <!-- bombé -->
+  <circle cx="50" cy="50" r="8" fill="#3a3a40" stroke="#c8a020" stroke-width="1.2"/>
+</svg>

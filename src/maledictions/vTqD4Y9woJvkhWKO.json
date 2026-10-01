@@ -1,0 +1,14 @@
+{
+ "_id": "vTqD4Y9woJvkhWKO",
+ "_key": "!items!vTqD4Y9woJvkhWKO",
+ "name": "Malédiction — Fortune",
+ "type": "malediction",
+ "folder": "IBU4xVKpkvhYYWq1",
+ "img": "systems/dieux-ennemis-nonofficiel/assets/maledictions/malediction-fortune.svg",
+ "system": {
+  "dieuSource": "fortune",
+  "force": 1,
+  "malusDes": 1,
+  "effet": "<p>1 dé de pénalité pour les actions du domaine Fortune.</p><p><em>Réglez la force sur le nombre de succès obtenus par le dieu.</em></p>"
+ }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "dieux-ennemis-nonofficiel",
+  "title": "Dieux Ennemis (non officiel)",
+  "description": "Système NON OFFICIEL, créé par un fan, pour jouer à Dieux Ennemis sur Foundry VTT : fiches de héros, de dieux et de PNJ, jets de risque et d'attaque, actions divines. Il ne contient aucun texte, règle détaillée ni illustration des livres : il faut posséder le jeu (Les XII Singes) pour jouer. Non affilié aux XII Singes ni à l'auteur du jeu.",
+  "version": "0.3.2",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "magisterphamtom",
+      "url": "https://github.com/magisterphamtom"
+    }
+  ],
+  "esmodules": [
+    "dieux-ennemis.mjs"
+  ],
+  "styles": [
+    "styles/dieux-ennemis.css"
+  ],
+  "languages": [
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "heros": {},
+      "dieu": {},
+      "figurant": {},
+      "premier-role": {}
+    },
+    "Item": {
+      "historique": {},
+      "equipment": {},
+      "benediction": {},
+      "pouvoir": {},
+      "malediction": {}
+    }
+  },
+  "initiative": "(@devotions.champs-de-bataille)d6cs>=4",
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
+  "primaryTokenAttribute": "blessures.value",
+  "url": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel",
+  "manifest": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/releases/latest/download/system.json",
+  "download": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/releases/download/v0.3.2/dieux-ennemis-nonofficiel.zip",
+  "bugs": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/issues",
+  "packs": [
+    {
+      "name": "wiki",
+      "label": "Guide — Jouer avec Foundry",
+      "path": "packs/wiki",
+      "type": "JournalEntry",
+      "system": "dieux-ennemis-nonofficiel"
+    },
+    {
+      "name": "maledictions",
+      "label": "Malédictions (modèles)",
+      "path": "packs/maledictions",
+      "type": "Item",
+      "system": "dieux-ennemis-nonofficiel"
+    }
+  ],
+  "socket": true
+}

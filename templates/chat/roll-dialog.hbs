@@ -1,0 +1,39 @@
+{{!-- ======================================================
+     DIALOG DE JET — Dieux Ennemis
+     ====================================================== --}}
+<form class="roll-dialog">
+  <div class="form-group">
+    <label>{{localize "DIEUX.Roll.ChoixDieu"}}</label>
+    <select name="dieu">
+      {{#each DIEUX.dieux as |dieuKey|}}
+      <option value="{{dieuKey}}">
+        {{nomDieu dieuKey}} ({{lookup ../actor.system.devotions dieuKey}} dés)
+        — {{domaineAction dieuKey}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "DIEUX.Roll.DesHistoriques"}}</label>
+    <input type="number" name="historique" value="0" min="0" max="20">
+    <small>{{localize "DIEUX.Roll.DesHistoriquesDesc"}}</small>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "DIEUX.Roll.DesBonus"}}</label>
+    <input type="number" name="desBonus" value="0" min="-10" max="20">
+    <small>{{localize "DIEUX.Roll.DesBonusDesc"}}</small>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "DIEUX.Roll.Difficulte"}}</label>
+    <select name="difficulte">
+      <option value="1">Facile (1)</option>
+      <option value="2" selected>Normal (2)</option>
+      <option value="3">Difficile (3)</option>
+      <option value="4">Extrême (4)</option>
+      <option value="8">Mythique (8)</option>
+    </select>
+  </div>
+</form>

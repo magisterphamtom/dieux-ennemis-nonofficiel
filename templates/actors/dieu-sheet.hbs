@@ -1,0 +1,141 @@
+{{!-- ================================================================
+     FICHE DIEU — Dieux Ennemis
+     ================================================================ --}}
+<div class="de-sheet-wrap">
+
+  <header class="de-header">
+    <div class="de-header-top">
+      <img class="de-avatar" src="{{actor.img}}" title="{{actor.name}}" data-edit="img">
+      <div class="de-header-info">
+        <input class="de-actor-name" type="text" name="name" value="{{actor.name}}" placeholder="Nom du dieu"/>
+        <div class="de-header-meta">
+          <span class="de-meta-item">
+            Domaine :
+            <select name="system.domaine" data-action="inline-edit" data-field="system.domaine">
+              {{#each gods as |god|}}
+              <option value="{{god.id}}" {{#ifEq ../system.domaine god.id}}selected{{/ifEq}}>
+                {{god.domaine}}
+              </option>
+              {{/each}}
+            </select>
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="de-tabs tabs" data-tabs="primary">
+    <a class="item active" data-tab="principal">⚜ Héros liés</a>
+    <a class="item" data-tab="pouvoirs">✦ Pouvoirs</a>
+    <a class="item" data-tab="notes">📜 Notes</a>
+  </nav>
+
+  <div class="sheet-body">
+
+    {{!-- ── ONGLET HÉROS LIÉS ─────────────────────────── --}}
+    <section class="sheet-tab tab active" data-tab="principal">
+
+      {{!-- Points de Divinité --}}
+      <div class="de-section">
+        <h3 class="de-section-title">
+          Points de Divinité
+          <span class="de-section-title-deco">+{{departScenario}} par scénario</span>
+        </h3>
+        <div class="de-section-body">
+          <div class="de-divinite-tracker">
+            <button class="de-divinite-btn divinite-moins" type="button" title="Retirer 1 point">−</button>
+            <div class="de-divinite-display">{{system.divinite.value}}</div>
+            <button class="de-divinite-btn divinite-plus" type="button" title="Ajouter 1 point">＋</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Actions divines --}}
+      <div class="de-section">
+        <h3 class="de-section-title">Actions divines</h3>
+        <div class="de-section-body">
+          <button type="button" class="de-divin-scenario" data-divin="nouveauScenario"
+            title="Divinité conservée + somme des Dévotions des héros">
+            <i class="fas fa-sun"></i>
+            <span>Nouveau scénario</span>
+            <small>+{{departScenario}} points</small>
+          </button>
+          <div class="de-divin-actions">
+            <button type="button" class="de-divin-btn" data-divin="autorite" title="Répondre à une question de votre domaine">
+              <i class="fas fa-gavel"></i><span>Autorité</span><small>1 point</small></button>
+            <button type="button" class="de-divin-btn" data-divin="inspirer" title="Donner des dés à un héros pour son prochain jet">
+              <i class="fas fa-feather"></i><span>Inspirer</span><small>pts × Dévotion</small></button>
+            <button type="button" class="de-divin-btn" data-divin="miracle" title="Difficulté 5, 7 ou 10">
+              <i class="fas fa-wand-sparkles"></i><span>Miracle</span><small>diff. 5 / 7 / 10</small></button>
+            <button type="button" class="de-divin-btn" data-divin="maudire" title="Dés = points × Hubris du héros">
+              <i class="fas fa-skull"></i><span>Maudire</span><small>pts × Hubris</small></button>
+            <button type="button" class="de-divin-btn" data-divin="soigner" title="Toutes les blessures d'un héros">
+              <i class="fas fa-heart"></i><span>Soigner</span><small>1 point</small></button>
+            <button type="button" class="de-divin-btn" data-divin="ceremonie" title="Prêtre (Dévotion 5+), une fois par scénario">
+              <i class="fas fa-fire-flame-curved"></i><span>Cérémonie</span><small>prêtre 5+</small></button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Héros qui me vénèrent (lus automatiquement dans le monde) --}}
+      <div class="de-section">
+        <h3 class="de-section-title">
+          Héros qui me vénèrent
+          <span class="de-section-title-deco">{{nomDomaine}}</span>
+        </h3>
+        <div class="de-section-body">
+          {{#each herosVenerants as |h|}}
+          <div class="de-venerant {{#unless h.joueur}}de-venerant-pnj{{/unless}}">
+            <img src="{{h.img}}" alt="">
+            <span class="de-venerant-nom">{{h.nom}}{{#unless h.joueur}} <small>(pas de joueur)</small>{{/unless}}</span>
+            {{#if h.rang}}<span class="de-venerant-rang">{{h.rang}}</span>{{/if}}
+            <span class="de-venerant-dev" title="Dévotion">{{h.devotion}}</span>
+          </div>
+          {{else}}
+          <p class="de-venerant-vide">Aucun héros dans le monde.</p>
+          {{/each}}
+        </div>
+      </div>
+
+    </section>
+
+    {{!-- ── ONGLET POUVOIRS ──────────────────────────────── --}}
+    <section class="sheet-tab tab" data-tab="pouvoirs">
+      <div class="de-section">
+        <h3 class="de-section-title">
+          Pouvoirs divins
+          <a class="de-btn-sm item-create" data-type="pouvoir">＋ Ajouter</a>
+        </h3>
+        <div class="de-section-body">
+          {{#each pouvoirs as |p|}}
+          <div class="de-benediction-row" data-item-id="{{p.id}}">
+            <span style="font-family:var(--de-font-title);font-size:10px;color:var(--de-red);min-width:30px;">
+              {{p.system.coutDivinite}}✦
+            </span>
+            <span class="de-benediction-name">{{p.name}}</span>
+            <div class="de-item-controls">
+              <a class="item-edit"><i class="fas fa-edit"></i></a>
+              <a class="item-delete danger"><i class="fas fa-trash"></i></a>
+            </div>
+          </div>
+          {{else}}
+          <p style="color:var(--de-ink-brown);font-style:italic;font-size:12px;text-align:center;padding:10px 0;">
+            Aucun pouvoir divin.
+          </p>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+
+    {{!-- ── ONGLET NOTES ──────────────────────────────────── --}}
+    <section class="sheet-tab tab" data-tab="notes">
+      <div class="de-section">
+        <h3 class="de-section-title">Notes</h3>
+        <div class="de-section-body">
+          <textarea name="system.notes" rows="8" class="de-editor-field">{{system.notes}}</textarea>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

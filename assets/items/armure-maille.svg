@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="12" fill="#1a1a1a"/>
+  <!-- corps -->
+  <path d="M28,35 Q28,22 50,20 Q72,22 72,35 L68,78 Q68,84 50,86 Q32,84 32,78 Z" fill="#5a5a60" stroke="#8a8a90" stroke-width="1"/>
+  <!-- maille pattern -->
+  <path d="M28,35 L72,35 M28,42 L72,42 M28,49 L72,49 M28,56 L72,56 M28,63 L72,63 M28,70 L72,70 M28,77 L72,77" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/>
+  <path d="M35,20 L35,84 M42,19 L42,85 M50,18 L50,86 M58,19 L58,85 M65,20 L65,84" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/>
+  <!-- épaulettes -->
+  <ellipse cx="28" cy="36" rx="9" ry="6" fill="#4a4a50" stroke="#7a7a80" stroke-width="0.8"/>
+  <ellipse cx="72" cy="36" rx="9" ry="6" fill="#4a4a50" stroke="#7a7a80" stroke-width="0.8"/>
+</svg>

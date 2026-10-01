@@ -1,0 +1,14 @@
+{
+ "_id": "yJLQjjAkuE6WaW6Y",
+ "_key": "!items!yJLQjjAkuE6WaW6Y",
+ "name": "Malédiction — Justice",
+ "type": "malediction",
+ "folder": "IBU4xVKpkvhYYWq1",
+ "img": "systems/dieux-ennemis-nonofficiel/assets/maledictions/malediction-justice.svg",
+ "system": {
+  "dieuSource": "justice",
+  "force": 1,
+  "malusDes": 1,
+  "effet": "<p>1 dé de pénalité pour les actions du domaine Justice.</p><p><em>Réglez la force sur le nombre de succès obtenus par le dieu.</em></p>"
+ }
+}
