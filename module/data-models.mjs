@@ -23,6 +23,8 @@ export class HerosDataModel extends foundry.abstract.TypeDataModel {
       // Traits
       momentsCles: new HTMLField({ initial: "", label: "Moments-Clés" }),
       repartie: new StringField({ initial: "", label: "Répartie" }),
+      // Réserve de répartie (Livret des héros p. 27) : points gagnés par l'interprétation, dépensés en dés lors des joutes verbales
+      reserveRepartie: new NumberField({ integer: true, min: 0, initial: 0 }),
       faiblesseHeroique: new StringField({ initial: "", label: "Faiblesse Héroïque" }),
       // Dévotions
       devotions: new SchemaField(devotionsSchema()),

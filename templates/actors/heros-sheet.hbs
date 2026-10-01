@@ -174,8 +174,12 @@
         <div class="de-section">
           <h3 class="de-section-title">Répartie</h3>
           <div class="de-section-body">
+            <div class="de-repartie-reserve" title="1 point gagné par partie pour une bonne interprétation ; chaque point dépensé = 1 dé lors d'un échange verbal (puis il est perdu)">
+              <span>Réserve de répartie</span>
+              <input type="number" name="system.reserveRepartie" value="{{system.reserveRepartie}}" min="0"/>
+            </div>
             <input class="de-trait-input" type="text" name="system.repartie"
-              value="{{system.repartie}}" placeholder="Une phrase courte et percutante…"/>
+              value="{{system.repartie}}" placeholder="Sa réplique fétiche…"/>
           </div>
         </div>
         <div class="de-section">

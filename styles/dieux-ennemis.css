@@ -2858,3 +2858,9 @@
 #dieux-ennemis-carte-monde .window-content { padding: 0; }
 .de-carte-monde.zoom { display: block; overflow: auto; cursor: zoom-out; }
 .de-carte-monde.zoom img { max-width: none; max-height: none; cursor: zoom-out; }
+
+/* Réserve de répartie (0.3.6) */
+.de-repartie-reserve { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-size: 12px; font-weight: 700; color: #4a1800; }
+.de-repartie-reserve input { width: 52px !important; text-align: center; font-weight: 900; font-size: 16px; }
+.de-atk-check-perdu { opacity: .55; text-decoration: line-through; }
+.de-atk-perte { color: #8b1a1a; font-weight: 700; text-decoration: none; }

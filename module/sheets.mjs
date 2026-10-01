@@ -5,7 +5,7 @@ import { rollAttaque, rollInitiative } from "./combat.mjs";
 import { rollRisque } from "./risque.mjs";
 import { ACTIONS_DIVINES } from "./dieu-actions.mjs";
 import { majActeur } from "./relais.mjs";
-import { invoquerBenediction, limiteBenedictions, usagesBenedictions } from "./benedictions.mjs";
+import { invoquerBenediction, limiteBenedictions, usagesBenedictions, accorderBenediction, revoquerBenediction } from "./benedictions.mjs";
 import { finDeScenarioHeros } from "./experience.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -246,6 +246,7 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       btn.addEventListener("click", ev => {
         const row  = ev.currentTarget.closest("[data-item-id]");
         const item = row ? this.actor.items.get(row.dataset.itemId) : null;
+        if (item?.type === "benediction") return revoquerBenediction(this.actor, item);
         item?.delete();
       });
     });
@@ -321,8 +322,9 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       }
     }
 
-    // Créer l'item embarqué
+    // Créer l'item embarqué (une bénédiction propose de débiter le dieu concerné)
     const itemData = item.toObject();
+    if (item.type === "benediction") return accorderBenediction(this.actor, itemData);
     return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 }

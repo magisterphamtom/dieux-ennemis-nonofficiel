@@ -70,6 +70,7 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
   ].join("");
 
   const malus = malusArmure(actor);
+  const reserveRep = actor.type === "heros" ? Number(actor.system.reserveRepartie ?? 0) : 0;
 
   const optionsDiff = DIFFICULTES_RISQUE.map(d =>
     `<option value="${d.val}"${d.val === 2 ? " selected" : ""}>${d.label}</option>`
@@ -131,6 +132,15 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
     <span class="de-atk-check-bonus">−${malus}</span>
   </label>` : ""}
 
+  ${reserveRep > 0 ? `
+  <div class="de-atk-row" title="Échanges verbaux : chaque point dépensé donne 1 dé, puis il est perdu">
+    <div class="de-atk-label">
+      <i class="fas fa-comments"></i> Puiser dans la réserve de répartie
+      <span class="de-atk-hint">(${reserveRep} disponible${reserveRep > 1 ? "s" : ""})</span>
+    </div>
+    <input type="number" name="repartie" value="0" min="0" max="${reserveRep}">
+  </div>` : ""}
+
   <div class="de-atk-row">
     <div class="de-atk-label">
       <i class="fas fa-dice"></i> Dés-avantages (dés en plus)
@@ -164,13 +174,14 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
     const histEl  = root.querySelector("[name=historiqueId]:checked");
     const hist    = Number(histEl?.dataset.bonus) || 0;
     const desav   = Math.max(0, Number(root.querySelector("[name=desAvantages]")?.value) || 0);
+    const rep     = Math.min(reserveRep, Math.max(0, Number(root.querySelector("[name=repartie]")?.value) || 0));
     const diff    = Number(root.querySelector("[name=difficulte]")?.value) || 0;
     const malus   = Number(root.querySelector("[name=useMalus]:checked")?.dataset.malus) || 0;
     filtrerMaledictions(root, src);
     const div     = lireDivin(root);
     return { src, isHub, brut, hors, maxBase, limite, base, hist, histId: histEl?.value ?? "", desav, diff, malus,
-             insp: div.plus, maled: div.moins, inspIdx: div.inspIdx,
-             total: Math.max(0, base + hist + desav + div.plus - malus - div.moins) };
+             insp: div.plus, maled: div.moins, inspIdx: div.inspIdx, rep,
+             total: Math.max(0, base + hist + desav + rep + div.plus - malus - div.moins) };
   };
 
   const result = await DialogV2.prompt({
@@ -192,6 +203,7 @@ export async function rollRisque(actor, source = "champs-de-bataille") {
         if (p.limite) parts[0] = `${p.base}/${p.maxBase} accordés`;
         if (p.hist)  parts.push(`+${p.hist} hist.`);
         if (p.desav) parts.push(`+${p.desav} dés-av.`);
+        if (p.rep)   parts.push(`+${p.rep} répartie`);
         if (p.insp)  parts.push(`+${p.insp} inspir.`);
         if (p.malus) parts.push(`−${p.malus} armure`);
         if (p.maled) parts.push(`−${p.maled} malédiction`);
@@ -231,6 +243,7 @@ async function _resoudreRisque(actor, p) {
   // Acolyte (Dévotion ≥ 4 envers le dieu invoqué) : relance d'un échec
   const aco = await appliquerAcolyte(roll, estAcolyte(actor, p.src));
   await consommerInspirations(actor, p.inspIdx);
+  if (p.rep) await actor.update({ "system.reserveRepartie": Math.max(0, Number(actor.system.reserveRepartie ?? 0) - p.rep) });
   const succes = aco.succes;
 
   // Détail du pool
@@ -239,6 +252,7 @@ async function _resoudreRisque(actor, p) {
     : `${god?.name ?? p.src} ${p.hors ? `${p.brut}÷2=${p.maxBase} (hors domaine)` : p.maxBase}${p.limite ? ` → ${p.base} accordé${p.base > 1 ? "s" : ""}` : ""}`];
   if (p.hist)  detail.push(`+${p.hist} ${hist?.name ?? "historique"}`);
   if (p.desav) detail.push(`+${p.desav} dés-avantages`);
+  if (p.rep)   detail.push(`+${p.rep} réserve de répartie`);
   if (p.insp)  detail.push(`+${p.insp} inspiration divine`);
   if (p.malus) detail.push(`−${p.malus} armure`);
   if (p.maled) detail.push(`−${p.maled} malédiction`);

@@ -63,3 +63,69 @@ export function iconeMalediction(dieuId) {
   const sept = (CONFIG.DIEUX?.gods ?? []).some(g => g.id === dieuId);
   return sept ? `systems/${game.system.id}/assets/maledictions/malediction-${dieuId}.svg` : "icons/svg/skull.svg";
 }
+
+// ── Coût d'attribution / de révocation (Livret des dieux p. 10-12) ──
+// Attribuer : 5 points de Divinité (3 si le héros est le champion du dieu, Dévotion ≥ 6). Révoquer : 5 points.
+
+/** Acteur Dieu qui gouverne ce domaine (s'il existe dans le monde). */
+function dieuDuDomaine(dieuId) {
+  return game.actors.find(a => a.type === "dieu" && a.system.domaine === dieuId) ?? null;
+}
+
+async function choisirDebit(titre, texte, cout, dieu) {
+  const { DialogV2 } = foundry.applications.api;
+  const dispo = Number(dieu.system.divinite?.value ?? 0);
+  return DialogV2.wait({
+    window: { title: titre, icon: "fas fa-hands-praying" },
+    classes: ["de-dialog-attaque"],
+    position: { width: 440 },
+    content: `<div class="de-atk de-divin"><p class="de-divin-cout">${texte}<br>
+      <strong>${dieu.name}</strong> dépense <strong>${cout} points de Divinité</strong> (${dispo} disponibles).</p></div>`,
+    buttons: [
+      { action: "debiter", label: `Débiter ${cout} points`, icon: "fas fa-check", default: true, disabled: dispo < cout },
+      { action: "gratuit", label: "Sans débiter", icon: "fas fa-feather" },
+      { action: "annuler", label: "Annuler", icon: "fas fa-times" }
+    ],
+    rejectClose: false
+  }).then(choix => (choix === "debiter" && dispo < cout) ? "annuler" : choix);
+}
+
+/** Ajoute une bénédiction au héros en proposant de débiter le dieu concerné. Renvoie false si annulé. */
+export async function accorderBenediction(actor, itemData) {
+  const dieuId = itemData.system?.dieuSource;
+  const dieu = dieuDuDomaine(dieuId);
+  if (dieu && actor.type === "heros") {
+    const champion = Number(actor.system.devotions?.[dieuId] ?? 0) >= 6;
+    const cout = champion ? 3 : 5;
+    const choix = await choisirDebit(`Accorder « ${itemData.name} »`,
+      `${actor.name} reçoit une bénédiction de ${dieu.name}${champion ? " (son champion : coût réduit)" : ""}.`, cout, dieu);
+    if (!choix || choix === "annuler") return false;
+    if (choix === "debiter") {
+      await majActeur(dieu, { "system.divinite.value": Number(dieu.system.divinite?.value ?? 0) - cout });
+      ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: dieu }),
+        content: `<div class="de-chat-attaque de-chat-divin"><h3><i class="fas fa-hands-praying"></i> ${dieu.name} bénit ${actor.name}</h3>
+          <div class="de-roll-result"><span class="de-success">« ${itemData.name} »</span></div>
+          <p class="de-chat-sub"><em>${cout} points de Divinité dépensés</em></p></div>` });
+    }
+  }
+  await actor.createEmbeddedDocuments("Item", [itemData]);
+  return true;
+}
+
+/** Retire une bénédiction en proposant la révocation payante par le dieu concerné. */
+export async function revoquerBenediction(actor, item) {
+  const dieu = dieuDuDomaine(item.system.dieuSource);
+  if (dieu && actor.type === "heros") {
+    const choix = await choisirDebit(`Révoquer « ${item.name} »`,
+      `${dieu.name} retire sa bénédiction à ${actor.name}.`, 5, dieu);
+    if (!choix || choix === "annuler") return;
+    if (choix === "debiter") {
+      await majActeur(dieu, { "system.divinite.value": Number(dieu.system.divinite?.value ?? 0) - 5 });
+      ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: dieu }),
+        content: `<div class="de-chat-attaque de-chat-divin"><h3><i class="fas fa-hand"></i> ${dieu.name} révoque une bénédiction</h3>
+          <div class="de-roll-result"><span class="de-failure">${actor.name} perd « ${item.name} »</span></div>
+          <p class="de-chat-sub"><em>5 points de Divinité dépensés</em></p></div>` });
+    }
+  }
+  return item.delete();
+}

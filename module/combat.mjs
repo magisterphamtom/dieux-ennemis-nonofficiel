@@ -134,6 +134,8 @@ async function rollAttaque(attaquant) {
   const devo     = devoCombat(attaquant);
   const desEquip = desAvEquipement(attaquant);
   const desAcq   = desAvAcquis(attaquant);
+  // Dernière cible attaquée : en changer fait perdre les dés-avantages acquis (Livret des héros p. 23)
+  const derniereCible = attaquant.getFlag?.(game.system.id, "derniereCible") ?? "";
   const malus    = malusArmure(attaquant);
 
   const historiques = (attaquant.items ?? [])
@@ -164,7 +166,7 @@ async function rollAttaque(attaquant) {
   }).join("");
 
   const content = `
-<div class="de-atk" data-devo="${devo}">
+<div class="de-atk" data-devo="${devo}" data-derniere-cible="${derniereCible}">
 
   <!-- Bandeau stats : 3 cases -->
   <div class="de-atk-banner">
@@ -222,7 +224,7 @@ async function rollAttaque(attaquant) {
       ${desAcq > 0 ? `
       <label class="de-atk-check">
         <input type="checkbox" name="useAcquis" data-bonus="${desAcq}" checked>
-        <span>Acquis par les attaques réussies</span>
+        <span>Acquis par les attaques réussies <small class="de-atk-perte" hidden>— perdus : nouvelle cible</small></span>
         <span class="de-atk-check-bonus">+${desAcq}</span>
       </label>` : ""}
     </div>
@@ -270,6 +272,16 @@ async function rollAttaque(attaquant) {
       const root = (dialogOrHtml?.element ?? dialogOrHtml)?.querySelector?.(".de-atk");
       if (!root) return;
       const majPool = () => {
+        // Nouvelle cible : les dés-avantages acquis contre l'ancienne sont perdus
+        const acq = root.querySelector("[name=useAcquis]");
+        if (acq) {
+          const cibleSel = root.querySelector("[name=cibleId]")?.value ?? "";
+          const perte = !!(root.dataset.derniereCible && cibleSel && cibleSel !== root.dataset.derniereCible);
+          if (perte) acq.checked = false;
+          acq.disabled = perte;
+          root.querySelector(".de-atk-perte").hidden = !perte;
+          acq.closest("label")?.classList.toggle("de-atk-check-perdu", perte);
+        }
         const devoMax = Number(root.dataset.devo) || 0;
         const acc   = (root.querySelector("[name=accordes]")?.value ?? "").trim();
         const devoV = acc === "" ? devoMax : Math.min(devoMax, Math.max(0, Number(acc) || 0));
@@ -373,6 +385,17 @@ async function _resoudreAttaque(attaquant, opts) {
 
   // Acolyte du dieu des Champs de bataille (Dévotion Champs de bataille ≥ 4) : relance d'un échec
   const aco = await appliquerAcolyte(roll, estAcolyte(attaquant, "champs-de-bataille"));
+  // Changement de cible : perte des dés-avantages acquis, puis mémorisation de la nouvelle cible
+  let perteTxt = "";
+  if (cible) {
+    const ancienne = attaquant.getFlag?.(game.system.id, "derniereCible");
+    const majCible = { [`flags.${game.system.id}.derniereCible`]: cible.id };
+    if (ancienne && ancienne !== cible.id && desAvAcquis(attaquant) > 0) {
+      majCible["system.desAvantages"] = 0;
+      perteTxt = `${attaquant.name} change de cible : ses ${desAvAcquis(attaquant)} dés-avantages acquis sont perdus.`;
+    }
+    await majActeur(attaquant, majCible);
+  }
   await consommerInspirations(attaquant, divin.inspIdx);
   if (cible) await consommerProtection(cible);
   const successes = aco.succes;
@@ -427,6 +450,7 @@ async function _resoudreAttaque(attaquant, opts) {
     <span>Succès : <strong>${successes}</strong></span>
   </div>
   <div class="de-chat-detail">${detailPool.join(" ")}</div>
+  ${perteTxt ? `<div class="de-chat-detail">⚠ ${perteTxt}</div>` : ""}
   <div class="de-chat-dice">${diceHtml}</div>
   ${acolyteHtml(aco.relance, nomDieu("champs-de-bataille"))}
   <div class="de-roll-result">${résultatHtml}</div>
