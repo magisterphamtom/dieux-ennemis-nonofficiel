@@ -12,6 +12,7 @@ import { migrerMonde } from "./module/migration.mjs";
 import { enregistrerReglagesCarte, carteAuLancement, boutonCarte } from "./module/carte.mjs";
 import { rollInitiative, bindCombatButton, _interventionDivine } from "./module/combat.mjs";
 import { initRelais } from "./module/relais.mjs";
+import { enregistrerReglagesContestation } from "./module/cartes-divines.mjs";
 
 // ── Liste des dieux ──────────────────────────────────────────
 const GODS = [
@@ -97,6 +98,7 @@ Hooks.once("init", () => {
 
   // Carte du monde (image, ouverture au lancement)
   enregistrerReglagesCarte();
+  enregistrerReglagesContestation();
 
   // Noms des dieux personnalisables (Configuration → Paramètres du système)
   for (const g of GODS) {

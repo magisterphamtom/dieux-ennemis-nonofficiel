@@ -30,6 +30,17 @@
             {{/each}}
           </select>
         </div>
+        {{#if peuples.length}}
+        <div class="de-patron-wrap de-peuple-wrap">
+          <span class="de-patron-label"><i class="fas fa-users"></i> PEUPLE</span>
+          <select class="de-patron-select de-peuple-select" {{#unless editable}}disabled{{/unless}}>
+            <option value="">Humain</option>
+            {{#each peuples as |p|}}
+              <option value="{{p.id}}" {{#ifEq ../system.peuple p.id}}selected{{/ifEq}}>{{p.nom}}</option>
+            {{/each}}
+          </select>
+        </div>
+        {{/if}}
       </div>
 
       {{!-- Hubris avec tooltip --}}
@@ -96,20 +107,13 @@
           </h3>
           <div class="de-section-body">
             <div class="de-blessures-wrap">
+              {{#each blessuresRangees as |rangee|}}
               <div class="de-blessures-row">
-                {{#each blessuresArr}}
-                  {{#if (lt @index 5)}}
-                    <div class="blessure-case {{#if filled}}filled{{/if}}" data-idx="{{idx}}" title="Blessure {{add idx 1}}"></div>
-                  {{/if}}
+                {{#each rangee}}
+                  <div class="blessure-case {{#if filled}}filled{{/if}}" data-idx="{{idx}}" title="Blessure {{add idx 1}}"></div>
                 {{/each}}
               </div>
-              <div class="de-blessures-row">
-                {{#each blessuresArr}}
-                  {{#if (gt @index 4)}}
-                    <div class="blessure-case {{#if filled}}filled{{/if}}" data-idx="{{idx}}" title="Blessure {{add idx 1}}"></div>
-                  {{/if}}
-                {{/each}}
-              </div>
+              {{/each}}
             </div>
             {{#if seuilDefaite}}
             <div style="text-align:center;margin-top:8px;">
@@ -248,6 +252,24 @@
         </div>
       </div>
 
+      {{#if peuple}}
+      <div class="de-section de-peuple-section">
+        <h3 class="de-section-title">Peuple : {{peuple.nom}} <span class="de-section-title-deco">Arcanes du Monde p. {{peuple.page}}</span></h3>
+        <div class="de-section-body">
+          <ul class="de-peuple-liste">
+            {{#each peuple.particularites as |x|}}
+            <li class="{{#if x.auto}}de-peuple-auto{{/if}}">
+              <span class="de-peuple-marque" title="{{#if x.auto}}Appliqué automatiquement{{else}}À gérer à la table{{/if}}">{{#if x.auto}}⚙{{else}}✦{{/if}}</span>
+              <span>{{x.txt}}</span>
+              {{#if x.bouton}}{{#if ../editable}}<button type="button" class="de-peuple-btn" data-peuple-action="{{x.bouton}}">{{#ifEq x.bouton "squelette"}}Révéler{{else}}Dévorer{{/ifEq}}</button>{{/if}}{{/if}}
+            </li>
+            {{/each}}
+          </ul>
+          <p class="de-peuple-legende">⚙ appliqué automatiquement · ✦ à gérer à la table</p>
+        </div>
+      </div>
+      {{/if}}
+
     </section>
 
     {{!-- ═══════════════════════════════════════════════
@@ -304,6 +326,40 @@
           </table>
         </div>
       </div>
+
+      {{#if sceaux.actif}}
+      <div class="de-section de-stellaire">
+        <h3 class="de-section-title">
+          Magie stellaire
+          <span class="de-section-title-deco">{{sceaux.nombre}} sceau{{#if (gt sceaux.nombre 1)}}x{{/if}} · {{sceaux.xp}} / {{sceaux.seuilXp}} XP</span>
+        </h3>
+        <div class="de-section-body">
+          <p class="de-stellaire-aide">Tracer un sceau : <strong>1 dé par sceau connu</strong> contre sa difficulté. Échec : sceau inutilisable jusqu'à la nuit.</p>
+          {{#each sceaux.liste as |sc|}}
+          <div class="de-sceau-row {{#if sc.epuise}}de-sceau-epuise{{/if}}" title="{{sc.effet}}">
+            <span class="de-sceau-etoile">✦</span>
+            <div class="de-bened-txt">
+              <span class="de-bened-nom">{{sc.nom}}</span>
+              <small>{{sc.temps}} · diff. {{sc.diffTxt}}{{#if sc.epuise}} · épuisé jusqu'à la nuit{{/if}}</small>
+            </div>
+            {{#if ../editable}}
+            <button type="button" class="de-bened-invoquer" data-sceau="{{sc.id}}" {{#if sc.epuise}}disabled{{/if}}><i class="fas fa-star"></i> Tracer</button>
+            <div class="de-item-controls"><a data-sceau-oublier="{{sc.id}}" class="danger" title="Oublier ce sceau"><i class="fas fa-trash"></i></a></div>
+            {{/if}}
+          </div>
+          {{else}}
+          <p class="de-bened-vide">Aucun sceau. À la création, un stellaire peut placer jusqu'à 3 points de Dévotion en magie stellaire (1 sceau par point).</p>
+          {{/each}}
+          {{#if editable}}
+          <div class="de-stellaire-actions">
+            <button type="button" class="de-btn-action de-sceau-ajouter"><i class="fas fa-plus"></i> Apprendre un sceau</button>
+            <button type="button" class="de-btn-action de-sceau-nuit"><i class="fas fa-moon"></i> La nuit tombe</button>
+            <label class="de-stellaire-xp">XP <input type="number" name="system.xpStellaire" value="{{system.xpStellaire}}" min="0"></label>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+      {{/if}}
 
     </section>
 
@@ -547,7 +603,7 @@
             <div class="de-combat-col de-combat-col-blessures">
               <div class="de-combat-bloc de-combat-blessures de-combat-blessures-center">
                 <div class="de-combat-bloc-titre">💀 Blessures</div>
-                <div class="de-combat-blessure-max">10 blessures = <strong>KO</strong></div>
+                <div class="de-combat-blessure-max">{{system.blessures.max}} blessures = <strong>KO</strong></div>
                 <p class="de-combat-texte">−1 blessure / jour de repos complet</p>
               </div>
             </div>

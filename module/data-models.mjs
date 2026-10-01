@@ -17,6 +17,12 @@ export class HerosDataModel extends foundry.abstract.TypeDataModel {
     return {
       // Identité
       dieuPatron: new StringField({ initial: "", label: "Dieu Patron" }),
+      // Peuple (Arcanes du Monde) : "" = humain
+      peuple: new StringField({ initial: "", blank: true }),
+      // Magie stellaire (stellaires) : sceaux connus, sceaux épuisés jusqu'à la nuit, expérience
+      sceaux: new ArrayField(new StringField()),
+      sceauxEpuises: new ArrayField(new StringField()),
+      xpStellaire: new NumberField({ integer: true, min: 0, initial: 0 }),
       // Hubris
       hubrisNiveau: new NumberField({ integer: true, min: 0, max: 10, initial: 2 }),  // Livret des héros p. 12
       hubrisExp: new NumberField({ integer: true, min: 0, initial: 0 }),
@@ -34,7 +40,7 @@ export class HerosDataModel extends foundry.abstract.TypeDataModel {
           .map(g => [g, new NumberField({ integer: true, min: 0, initial: 0 })]))),
       // Blessures
       blessures: new SchemaField({
-        value: new NumberField({ integer: true, min: 0, max: 10, initial: 0 }),
+        value: new NumberField({ integer: true, min: 0, max: 12, initial: 0 }),
         max: new NumberField({ integer: true, initial: 10 })
       }),
       // Combat
@@ -56,7 +62,7 @@ export class HerosDataModel extends foundry.abstract.TypeDataModel {
   }
 
   get seuilDefaite() {
-    return (this.devotions["champs-de-bataille"] ?? 1) + 5;
+    return (this.devotions["champs-de-bataille"] ?? 1) + 5 + (this.peuple === "geant" ? 1 : 0);
   }
 }
 

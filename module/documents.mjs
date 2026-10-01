@@ -15,7 +15,7 @@ export class DiEActor extends Actor {
     // Seuil de défaite (aussi calculé par le getter DataModel, mais
     // on le met sur this pour que le template puisse accéder à actor.seuilDefaite)
     if (sys.devotions?.["champs-de-bataille"] !== undefined) {
-      this.seuilDefaite = sys.devotions["champs-de-bataille"] + 5;
+      this.seuilDefaite = sys.devotions["champs-de-bataille"] + 5 + (sys.peuple === "geant" ? 1 : 0);   // géant : + 6 (Arcanes du Monde p. 44)
     }
 
     // Bonus d'équipement

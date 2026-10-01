@@ -5,6 +5,7 @@
 import { majActeur, creerItems } from "./relais.mjs";
 import { reinitialiserUsages, iconeMalediction } from "./benedictions.mjs";
 import { finDeScenarioDieu } from "./experience.mjs";
+import { creerCarteMiracle, championDe, contestation } from "./cartes-divines.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const FLAG = "dieux-ennemis-nonofficiel";
@@ -238,46 +239,69 @@ export async function inspirer(dieu) {
 
 // ── 4. Miracle ───────────────────────────────────────────────
 // Livret des dieux p. 7-8 : 1 pt = Dévotion du héros ciblé en dés (1 dé sans héros) ;
-// hors domaine, coût doublé ; aide/entrave des autres dieux ; difficulté 5 / 7 / 10.
+// hors domaine, coût doublé ; aide/entrave des autres dieux (carte partagée) ; difficulté 5 / 7 / 10.
+// Champion (p. 12) : le dieu peut canaliser n'importe quel miracle par son champion (1 pt = Dévotion du champion).
 export async function miracle(dieu) {
   const liste = herosDuMonde(dieu);
+  const champion = championDe(dieu);
+  const devChamp = champion ? Number(champion.system.devotions?.[infoDieu(dieu).domaine] ?? 0) : 0;
   const calc = f => {
     const id = f.querySelector("[name=heros]").value;
     const h = liste.find(x => x.actor.id === id) ?? null;
     const pts = Math.max(1, Number(f.querySelector("[name=points]").value) || 1);
     const dom = f.querySelector("[name=domaine]").checked;
-    const autres = Number(f.querySelector("[name=autres]").value) || 0;
+    const canal = !!f.querySelector("[name=canal]")?.checked;
+    const partage = !!f.querySelector("[name=partage]")?.checked;
     const diff = Number(f.querySelector("[name=diff]").value) || 5;
-    const base = h ? pts * h.devotion : pts;
-    return { h, pts, dom, autres, diff, cout: dom ? pts : pts * 2, des: Math.max(0, base + autres) };
+    const texte = f.querySelector("[name=texte]").value.trim();
+    const dpp = canal ? devChamp : (h ? h.devotion : 1);
+    return { h, pts, dom, canal, partage, diff, texte, dpp, cout: dom ? pts : pts * 2, des: pts * dpp };
   };
   const res = await fenetre({
     titre: `Miracle — ${dieu.name}`, icone: "fa-sun", label: "Accomplir le miracle",
     contenu: champ("Héros ciblé", "fa-user",
         `<select name="heros">${optionsHeros(liste, { vide: "— Aucun héros ciblé (1 dé par point) —" })}</select>`)
+      + champ("Le miracle", "fa-comment", `<input type="text" name="texte" placeholder="Les flots s'écartent devant le navire…">`)
       + caseDomaine(true, "Le miracle relève de mon domaine")
+      + (champion ? `
+  <label class="de-atk-check" title="Livret des dieux p. 12 : le dieu canalise sa divinité par son champion">
+    <input type="checkbox" name="canal">
+    <span>Canaliser par mon champion, ${echapper(champion.name)} (1 point = ${devChamp} dés)</span>
+  </label>` : "")
       + ligneNombre("Points de Divinité (base)", "fa-star", "points")
       + champ("Ampleur", "fa-mountain", `<select name="diff">
           <option value="5">Petite intervention (5)</option>
           <option value="7">Intervention majeure (7)</option>
           <option value="10">Intervention importante (10)</option></select>`)
-      + ligneNombre("Dés ajoutés (+) ou retirés (−) par d'autres dieux", "fa-people-arrows", "autres", 0, -99, 99),
+      + `<label class="de-atk-check" title="Livret des dieux p. 8 : les autres dieux peuvent aider ou entraver le miracle">
+    <input type="checkbox" name="partage" checked>
+    <span>Laisser les autres dieux aider ou entraver avant le jet</span>
+  </label>`,
     apercu: r => { const c = calc(r);
       return `<p class="de-divin-cout">Coût : <strong>${c.cout}</strong> point${c.cout > 1 ? "s" : ""}${c.dom ? "" : " (doublé hors domaine)"}
-        → <strong>${c.des} dé${c.des > 1 ? "s" : ""}</strong>, difficulté ${c.diff}.</p>`; },
+        → <strong>${c.des} dé${c.des > 1 ? "s" : ""}</strong> (${c.dpp} par point${c.canal ? ", par le champion" : c.h ? `, Dévotion de ${echapper(c.h.actor.name)}` : ""}), difficulté ${c.diff}.</p>`; },
     valider: calc
   });
   if (!res) return;
-  if (res.des <= 0) return ui.notifications.warn("Aucun dé à lancer pour ce miracle.");
+  if (res.des <= 0) return ui.notifications.warn("Aucun dé à lancer pour ce miracle (le héros ciblé n'a aucune Dévotion envers vous).");
+  const diviniteAvant = divinite(dieu);
   if (!await depenser(dieu, res.cout)) return;
+  const detail = `${res.cout} point${res.cout > 1 ? "s" : ""} de Divinité${res.dom ? "" : " (hors domaine)"} × ${res.dpp} dé${res.dpp > 1 ? "s" : ""}${res.canal ? ` (canalisé par ${echapper(champion.name)})` : ""}`;
+  const cibleChampion = !!(res.h && res.h.devotion >= 6);
+
+  if (res.partage) return creerCarteMiracle(dieu, {
+    herosId: res.h?.actor.id, herosNom: res.h?.actor.name, texte: res.texte, des: res.des, diff: res.diff,
+    cout: res.cout, detail, diviniteAvant, cibleChampion });
+
   const roll = new Roll(`${res.des}d6cs>=4`);
   await roll.evaluate();
   const ok = roll.total >= res.diff;
   return carte(dieu, `Miracle de ${dieu.name}${res.h ? ` pour ${res.h.actor.name}` : ""}`, "fa-sun",
-    `<div class="de-chat-info"><span>Pool : <strong>${res.des}</strong></span><span>Diff. : <strong>${res.diff}</strong></span><span>Succès : <strong>${roll.total}</strong></span></div>
+    `${res.texte ? `<p class="de-miracle-texte">« ${echapper(res.texte)} »</p>` : ""}
+     <div class="de-chat-info"><span>Pool : <strong>${res.des}</strong></span><span>Diff. : <strong>${res.diff}</strong></span><span>Succès : <strong>${roll.total}</strong></span></div>
      <div class="de-chat-dice">${desHtml(roll)}</div>
      <div class="de-roll-result"><span class="${ok ? "de-success" : "de-failure"}">${ok ? "✔ Le miracle s'accomplit !" : "✘ Le miracle échoue."}</span></div>
-     <div class="de-chat-detail">${res.cout} point${res.cout > 1 ? "s" : ""} de Divinité${res.autres ? ` · ${res.autres > 0 ? "+" : ""}${res.autres} dés d'autres dieux` : ""}</div>`,
+     <div class="de-chat-detail">${detail}</div>`,
     [roll]);
 }
 
@@ -376,4 +400,4 @@ export async function ceremonie(dieu) {
      <div class="de-chat-detail">${res.actor.name} est épuisé par la nuit de rites.</div>`);
 }
 
-export const ACTIONS_DIVINES = { finScenario: finDeScenarioDieu, nouveauScenario, autorite, inspirer, miracle, maudire, soigner, ceremonie };
+export const ACTIONS_DIVINES = { finScenario: finDeScenarioDieu, nouveauScenario, autorite, contestation, inspirer, miracle, maudire, soigner, ceremonie };

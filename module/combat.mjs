@@ -6,6 +6,7 @@ const { DialogV2 }           = foundry.applications.api;
 import { estAcolyte, appliquerAcolyte, desHtml, acolyteHtml } from "./acolyte.mjs";
 import { blocDivin, lireDivin, consommerInspirations, protectionActive, consommerProtection, poserProtection, poserFaveurRound } from "./bonus-divins.mjs";
 import { majActeur } from "./relais.mjs";
+import { peupleDe, estHumain, bonusSeuil, blessuresInfligees } from "./peuples.mjs";
 const { renderTemplate }     = foundry.applications.handlebars;
 
 // ── Types d'adversaires ──────────────────────────────────────
@@ -87,6 +88,12 @@ function devoCombat(actor) {
 }
 
 /** Dés-avantages acquis en combat (attaques réussies) — perdus en cas d'échec. */
+/** Géants déjà frappés par cet attaquant dans le combat en cours (premier coup : +1 dé-avantage). */
+function geantsFrappes(actor) {
+  const f = actor?.getFlag?.(game.system.id, "geantsFrappes");
+  return f && f.combat === (game.combat?.id ?? "") ? (f.ids ?? []) : [];
+}
+
 function desAvAcquis(actor) {
   return Number(actor?.system?.desAvantages ?? 0);
 }
@@ -165,8 +172,35 @@ async function rollAttaque(attaquant) {
     return `<option value="${a.id}"${a.id === cibleDefault?.id ? " selected" : ""}>${label}</option>`;
   }).join("");
 
+  // Peuples (Arcanes du Monde) : sylvestre (Foyer), ogre (démons), premier coup contre un géant
+  const peuple    = peupleDe(attaquant)?.id ?? "";
+  const devoFoyer = Number(attaquant.system.devotions?.foyer ?? 0);
+  const geants    = acteursCibles.filter(a => peupleDe(a)?.id === "geant").map(a => a.id);
+  const dejaGeant = geantsFrappes(attaquant);
+  const optionsPeuple = [
+    peuple === "sylvestre" ? `
+      <label class="de-atk-check" title="Arcanes du Monde p. 52 : quand le combat menace ce qui relève du Foyer (nature, famille…)">
+        <input type="checkbox" name="useFoyer">
+        <span>Défendre le Foyer : attaquer avec la Dévotion Foyer (${devoFoyer})</span>
+        <span class="de-atk-check-bonus">🌿</span>
+      </label>` : "",
+    peuple === "ogre" ? `
+      <label class="de-atk-check" title="Arcanes du Monde p. 46">
+        <input type="checkbox" name="useOgre" data-bonus="1">
+        <span>Contre des démons ou un sorcier (premier round)</span>
+        <span class="de-atk-check-bonus">+1</span>
+      </label>` : "",
+    (estHumain(attaquant) && geants.length) ? `
+      <label class="de-atk-check de-atk-geant" hidden title="Arcanes du Monde p. 44 : tout humain a 1 dé-avantage pour son premier coup contre un géant">
+        <input type="checkbox" name="useGeant" data-bonus="1">
+        <span>Premier coup contre ce géant</span>
+        <span class="de-atk-check-bonus">+1</span>
+      </label>` : ""
+  ].join("");
+
   const content = `
-<div class="de-atk" data-devo="${devo}" data-derniere-cible="${derniereCible}">
+<div class="de-atk" data-devo="${devo}" data-devo-foyer="${devoFoyer}" data-derniere-cible="${derniereCible}"
+  data-geants="${geants.join(",")}" data-deja-geant="${dejaGeant.join(",")}">
 
   <!-- Bandeau stats : 3 cases -->
   <div class="de-atk-banner">
@@ -221,6 +255,7 @@ async function rollAttaque(attaquant) {
         <span>Armes et objets équipés</span>
         <span class="de-atk-check-bonus">+${desEquip}</span>
       </label>` : ""}
+      ${optionsPeuple}
       ${desAcq > 0 ? `
       <label class="de-atk-check">
         <input type="checkbox" name="useAcquis" data-bonus="${desAcq}" checked>
@@ -282,11 +317,23 @@ async function rollAttaque(attaquant) {
           root.querySelector(".de-atk-perte").hidden = !perte;
           acq.closest("label")?.classList.toggle("de-atk-check-perdu", perte);
         }
-        const devoMax = Number(root.dataset.devo) || 0;
+        // Premier coup contre un géant : case visible seulement pour une cible géante
+        const geantLbl = root.querySelector(".de-atk-geant");
+        if (geantLbl) {
+          const cibleSel = root.querySelector("[name=cibleId]")?.value ?? "";
+          const estGeant = (root.dataset.geants || "").split(",").includes(cibleSel);
+          const inp = geantLbl.querySelector("input");
+          if (geantLbl.hidden === estGeant) inp.checked = estGeant && !(root.dataset.dejaGeant || "").split(",").includes(cibleSel);
+          geantLbl.hidden = !estGeant;
+          if (!estGeant) inp.checked = false;
+        }
+        const foyer = root.querySelector("[name=useFoyer]")?.checked;
+        const devoMax = Number(foyer ? root.dataset.devoFoyer : root.dataset.devo) || 0;
+        root.querySelector(".de-atk-banner .de-atk-stat-val").textContent = devoMax;
         const acc   = (root.querySelector("[name=accordes]")?.value ?? "").trim();
         const devoV = acc === "" ? devoMax : Math.min(devoMax, Math.max(0, Number(acc) || 0));
         const hist  = Number(root.querySelector("[name=historiqueId]:checked")?.dataset.bonus) || 0;
-        const desav = [...root.querySelectorAll("[name=useEquip]:checked, [name=useAcquis]:checked")]
+        const desav = [...root.querySelectorAll("[name=useEquip]:checked, [name=useAcquis]:checked, [name=useOgre]:checked, [name=useGeant]:checked")]
           .reduce((t, c) => t + (Number(c.dataset.bonus) || 0), 0)
           + (Number(root.querySelector("[name=desSituation]")?.value) || 0);
         const mal   = Number(root.querySelector("[name=useMalus]:checked")?.dataset.malus) || 0;
@@ -314,6 +361,9 @@ async function rollAttaque(attaquant) {
           historiqueId: form.querySelector("[name=historiqueId]:checked")?.value ?? "",
           useEquip:     form.querySelector("[name=useEquip]")?.checked ?? false,
           useAcquis:    form.querySelector("[name=useAcquis]")?.checked ?? false,
+          useFoyer:     form.querySelector("[name=useFoyer]")?.checked ?? false,
+          useOgre:      form.querySelector("[name=useOgre]")?.checked ?? false,
+          useGeant:     form.querySelector("[name=useGeant]")?.checked ?? false,
           desSituation: Number(form.querySelector("[name=desSituation]")?.value) || 0,
           accordes:     (form.querySelector("[name=accordes]")?.value ?? "").trim(),
           useMalus:     form.querySelector("[name=useMalus]")?.checked ?? false,
@@ -338,7 +388,7 @@ async function _resoudreAttaque(attaquant, opts) {
   const cible = cibleId ? game.actors.get(cibleId) : null;
 
   // Pool : Dévotion + 1 historique + dés-avantages (tout s'ADDITIONNE)
-  const devoMax = devoCombat(attaquant);
+  const devoMax = opts.useFoyer ? Number(attaquant.system.devotions?.foyer ?? 0) : devoCombat(attaquant);
   // Le joueur du dieu des Champs de bataille peut accorder moins de dés que la Dévotion
   const devo = (opts.accordes ?? "") === "" ? devoMax : Math.min(devoMax, Math.max(0, Number(opts.accordes) || 0));
   const hist = historiqueId ? attaquant.items.get(historiqueId) : null;
@@ -346,15 +396,19 @@ async function _resoudreAttaque(attaquant, opts) {
   const desEquip = useEquip  ? desAvEquipement(attaquant) : 0;
   const desAcq   = useAcquis ? desAvAcquis(attaquant)     : 0;
   const desSit   = Math.max(0, Number(desSituation) || 0);
+  const desPeuple = (opts.useOgre ? 1 : 0) + (opts.useGeant ? 1 : 0);
   const malus    = useMalus ? malusArmure(attaquant) : 0;
 
-  const totalDes = Math.max(1, devo + desHist + desEquip + desAcq + desSit + divin.plus - malus - divin.moins);
+  const totalDes = Math.max(1, devo + desHist + desEquip + desAcq + desSit + desPeuple + divin.plus - malus - divin.moins);
 
-  const detailPool = [devo < devoMax ? `Dévotion ${devo}/${devoMax} accordés` : `Dévotion ${devo}`];
+  const nomDev = opts.useFoyer ? "Dévotion Foyer" : "Dévotion";
+  const detailPool = [devo < devoMax ? `${nomDev} ${devo}/${devoMax} accordés` : `${nomDev} ${devo}`];
   if (desHist)  detailPool.push(`+${desHist} ${hist.name}`);
   if (desEquip) detailPool.push(`+${desEquip} équipement`);
   if (desAcq)   detailPool.push(`+${desAcq} acquis`);
   if (desSit)   detailPool.push(`+${desSit} situation`);
+  if (opts.useOgre)  detailPool.push(`+1 contre démons/sorcier`);
+  if (opts.useGeant) detailPool.push(`+1 premier coup contre un géant`);
   if (divin.plus)  detailPool.push(`+${divin.plus} inspiration divine`);
   if (malus)    detailPool.push(`−${malus} armure`);
   if (divin.moins) detailPool.push(`−${divin.moins} malédiction`);
@@ -374,7 +428,7 @@ async function _resoudreAttaque(attaquant, opts) {
       // Protection divine du défenseur (déesse du Foyer) pour ce round
       const prot = protectionActive(cible);
       if (prot) { difficulte += Number(prot.bonus) || 0; protectionTxt = `+${prot.bonus} protection de ${prot.dieuNom}`; }
-      seuil      = devoCombat(cible) + 5;   // Livret des héros p. 24
+      seuil      = devoCombat(cible) + 5 + bonusSeuil(cible);   // Livret des héros p. 24 (géant : + 6)
       typeCombat = "opposition";
     }
   }
@@ -390,6 +444,7 @@ async function _resoudreAttaque(attaquant, opts) {
   if (cible) {
     const ancienne = attaquant.getFlag?.(game.system.id, "derniereCible");
     const majCible = { [`flags.${game.system.id}.derniereCible`]: cible.id };
+    if (opts.useGeant) majCible[`flags.${game.system.id}.geantsFrappes`] = { combat: game.combat?.id ?? "", ids: [...geantsFrappes(attaquant), cible.id] };
     if (ancienne && ancienne !== cible.id && desAvAcquis(attaquant) > 0) {
       majCible["system.desAvantages"] = 0;
       perteTxt = `${attaquant.name} change de cible : ses ${desAvAcquis(attaquant)} dés-avantages acquis sont perdus.`;
@@ -417,13 +472,14 @@ async function _resoudreAttaque(attaquant, opts) {
     if (defaite) {
       résultatHtml = `<span class="de-success de-defaite">💀 COMBAT REMPORTÉ ! (${successes} ≥ ${seuil})<br>${cible.name} est vaincu — le vainqueur décide de son sort.</span>`;
     } else if (reussite) {
-      résultatHtml = `<span class="de-success">✔ ${successes} succès ≥ ${difficulte} → <strong>1 Blessure</strong> pour ${cible.name}, <strong>+1 dé-avantage</strong> pour ${attaquant.name}</span>`;
+      const nbBl = blessuresInfligees(attaquant);
+      résultatHtml = `<span class="de-success">✔ ${successes} succès ≥ ${difficulte} → <strong>${nbBl} Blessure${nbBl > 1 ? "s" : ""}</strong> pour ${cible.name}, <strong>+1 dé-avantage</strong> pour ${attaquant.name}</span>`;
       boutons = `
 <div class="de-btn-row">
   <button type="button" class="de-apply-hit"
     data-cible-id="${cible.id}"
-    data-attaquant-id="${attaquant.id}">
-    <i class="fas fa-check"></i> Appliquer (1 Blessure + 1 dé-avantage)
+    data-attaquant-id="${attaquant.id}" data-blessures="${nbBl}">
+    <i class="fas fa-check"></i> Appliquer (${nbBl} Blessure${nbBl > 1 ? "s" : ""} + 1 dé-avantage)
   </button>
 </div>`;
     } else {
@@ -483,9 +539,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       if (!cible) return;
       const bl    = cible.system.blessures ?? { value: 0, max: 10 };
       const maxBl = Number(bl.max ?? 10);
-      const newBl = Math.min(maxBl, Number(bl.value ?? 0) + 1);
+      const nb    = Math.max(1, Number(btn.dataset.blessures) || 1);
+      const newBl = Math.min(maxBl, Number(bl.value ?? 0) + nb);
       await majActeur(cible, { "system.blessures.value": newBl });
-      let msg = `${cible.name} : +1 Blessure → ${newBl}/${maxBl}`;
+      let msg = `${cible.name} : +${nb} Blessure${nb > 1 ? "s" : ""} → ${newBl}/${maxBl}`;
       if (newBl >= maxBl) msg += ` — un dieu doit dépenser 1 Divinité ou ${cible.name} s'effondre !`;
       if (attaquant && "desAvantages" in attaquant.system) {
         const newDa = desAvAcquis(attaquant) + 1;

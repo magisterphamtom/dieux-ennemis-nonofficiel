@@ -5,7 +5,9 @@
 // la Dévotion monte de 1 et cette expérience est effacée. Un point peut aussi réduire
 // de 1 la force d'une malédiction (Livret des dieux p. 10).
 // ============================================================
-import { majActeur } from "./relais.mjs";
+import { majActeur, creerItems } from "./relais.mjs";
+import { estStellaire, ajouterXPStellaire } from "./stellaire.mjs";
+import { peupleDe } from "./peuples.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const DEV_MAX = 10;
@@ -58,7 +60,9 @@ export async function finDeScenarioHeros(actor) {
     const d = Number(devs[g.id] ?? 0);
     return `<option value="dev:${g.id}">${g.name} — Dévotion ${d} (${xps[g.id] ?? 0}/${3 * Math.max(1, d)} XP)</option>`;
   }).join("") + maled.map(m =>
-    `<option value="mal:${m.id}">Réduire « ${m.name} » (force ${m.system.force})</option>`).join("");
+    `<option value="mal:${m.id}">Réduire « ${m.name} » (force ${m.system.force})</option>`).join("")
+    + (estStellaire(actor) ? (() => { const n = (actor.system.sceaux ?? []).length;
+        return `<option value="stel:">Magie stellaire — ${n} sceau${n > 1 ? "x" : ""} (${actor.system.xpStellaire ?? 0}/${3 * Math.max(1, n)} XP)</option>`; })() : "");
 
   const res = await DialogV2.prompt({
     window: { title: `Fin de scénario — ${actor.name}`, icon: "fas fa-graduation-cap" },
@@ -80,6 +84,7 @@ export async function finDeScenarioHeros(actor) {
   for (const [cible, n] of Object.entries(compte)) {
     const [type, id] = cible.split(":");
     if (type === "dev") lignes.push(ligneResultat(actor, id, await ajouterXP(actor, id, n)));
+    else if (type === "stel") lignes.push(await ajouterXPStellaire(actor, n));
     else {
       const item = actor.items.get(id);
       if (!item) continue;
@@ -88,7 +93,25 @@ export async function finDeScenarioHeros(actor) {
       else { await item.update({ "system.force": force }); lignes.push(`<li>« ${item.name} » : force ${force}.</li>`); }
     }
   }
+  if (peupleDe(actor)?.id === "eternel") lignes.push(await memoireEternel(actor));
   return carte(actor, `Fin de scénario — ${actor.name}`, lignes);
+}
+
+/** Éternel (Arcanes du Monde p. 42) : 1-3, un des Historiques les plus bas perd 1 point ; 4-6, nouvel Historique à 1. */
+async function memoireEternel(actor) {
+  const roll = new Roll("1d6");
+  await roll.evaluate();
+  const d = roll.total;
+  if (d >= 4) {
+    await creerItems(actor, [{ name: "Nouveau souvenir", type: "historique", system: { valeur: 1 } }]);
+    return `<li>🎲 ${d} — <strong>${actor.name}</strong> se souvient : nouvel Historique à 1 point (« Nouveau souvenir », à renommer).</li>`;
+  }
+  const hist = actor.items.filter(i => i.type === "historique")
+    .sort((a, b) => Number(a.system.valeur ?? 0) - Number(b.system.valeur ?? 0));
+  if (!hist.length) return `<li>🎲 ${d} — <strong>${actor.name}</strong> oublie… mais n'a aucun Historique.</li>`;
+  const h = hist[0], v = Number(h.system.valeur ?? 1) - 1;
+  if (v <= 0) await h.delete(); else await h.update({ "system.valeur": v });
+  return `<li>🎲 ${d} — <strong>${actor.name}</strong> oublie : « ${h.name} » ${v <= 0 ? "disparaît" : `passe à ${v}`}.</li>`;
 }
 
 /** Fenêtre du dieu : 2 points à donner aux héros, sur leur Dévotion envers lui. */

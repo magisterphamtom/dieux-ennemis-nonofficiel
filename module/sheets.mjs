@@ -7,6 +7,8 @@ import { ACTIONS_DIVINES } from "./dieu-actions.mjs";
 import { majActeur } from "./relais.mjs";
 import { invoquerBenediction, limiteBenedictions, usagesBenedictions, accorderBenediction, revoquerBenediction } from "./benedictions.mjs";
 import { finDeScenarioHeros } from "./experience.mjs";
+import { PEUPLES, peupleDe, blessuresMax } from "./peuples.mjs";
+import { sceauxVue, lancerSceau, nouvelleNuit, choisirSceau, apprendreSceau } from "./stellaire.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 }              = foundry.applications.sheets;
@@ -30,6 +32,41 @@ function bindTabs(el, activeTab, setActiveTab) {
       _activate(tab);
     });
   });
+}
+
+// ── Peuples (Arcanes du Monde) ───────────────────────────────
+/** Change le peuple d'un héros : Blessures max, et (sur confirmation) Dévotions de départ. */
+async function changerPeuple(actor, id) {
+  const p = PEUPLES.find(x => x.id === id) ?? null;
+  const maj = { "system.peuple": id };
+  const max = 10 + (p?.blessuresBonus ?? 0);
+  maj["system.blessures.max"] = max;
+  if (Number(actor.system.blessures?.value ?? 0) > max) maj["system.blessures.value"] = max;
+  if (p?.devotionsDepart) {
+    const ok = await foundry.applications.api.DialogV2.confirm({
+      window: { title: `Peuple : ${p.nom}`, icon: "fas fa-users" },
+      content: `<p>Appliquer les <strong>Dévotions de départ</strong> des ${p.nom.toLowerCase()}s (étape 2 de la création) ?</p>
+        <p><em>${Object.entries(p.devotionsDepart).map(([g, v]) => `${CONFIG.DIEUX?.gods?.find(x => x.id === g)?.name ?? g} ${v}`).join(" · ")}</em></p>
+        <p>Répondez « Non » pour un héros déjà créé.</p>`,
+      rejectClose: false
+    });
+    if (ok) for (const [g, v] of Object.entries(p.devotionsDepart)) maj[`system.devotions.${g}`] = v;
+  }
+  return actor.update(maj);
+}
+
+/** Boutons des particularités (éternel : apparence squelettique ; ogre : dévorer). */
+async function actionPeuple(actor, action) {
+  if (action === "squelette") return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="de-chat-attaque de-chat-divin"><h3><i class="fas fa-skull"></i> ${actor.name} révèle son vrai visage</h3>
+      <p>Un squelette en guenilles apparaît un instant. Ceux qui ne l'ont jamais vu ainsi sont frappés d'effroi.</p>
+      <div class="de-roll-result"><span class="de-failure">En combat : chaque adversaire humain qui le voit perd 1 dé-avantage.</span></div></div>` });
+  if (action === "devorer") {
+    await actor.update({ "system.blessures.value": 0 });
+    return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="de-chat-attaque"><h3><i class="fas fa-drumstick-bite"></i> ${actor.name} dévore un humain</h3>
+        <div class="de-roll-result"><span class="de-success">Toutes ses Blessures sont effacées.</span></div></div>` });
+  }
 }
 
 // ── HÉROS ────────────────────────────────────────────────────
@@ -68,7 +105,15 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     ctx.gods = CONFIG.DIEUX?.gods ?? [];
 
     const bVal = this.actor.system.blessures?.value ?? 0;
-    ctx.blessuresArr = Array.from({ length: 10 }, (_, i) => ({ idx: i, filled: i < bVal }));
+    const bMax = Math.max(1, Number(this.actor.system.blessures?.max ?? 10));
+    ctx.blessuresArr = Array.from({ length: bMax }, (_, i) => ({ idx: i, filled: i < bVal }));
+    const moitie = Math.ceil(bMax / 2);
+    ctx.blessuresRangees = [ctx.blessuresArr.slice(0, moitie), ctx.blessuresArr.slice(moitie)];
+
+    // Peuple (Arcanes du Monde) et magie stellaire
+    ctx.peuples = PEUPLES;
+    ctx.peuple  = peupleDe(this.actor);
+    ctx.sceaux  = sceauxVue(this.actor);
 
     // Bonus Dés-Avantages d'équipement
     ctx.bonusDésAvEquip = this.actor.items
@@ -188,13 +233,40 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       btn.addEventListener("click", ev => { ev.preventDefault(); this.actor.unsetFlag("dieux-ennemis-nonofficiel", "inspiration"); });
     });
 
+    // ── Peuple ─────────────────────────────────────────────────
+    el.querySelector(".de-peuple-select")?.addEventListener("change", ev => {
+      ev.stopPropagation();
+      changerPeuple(this.actor, ev.currentTarget.value);
+    });
+    el.querySelectorAll("[data-peuple-action]").forEach(btn => {
+      btn.addEventListener("click", ev => { ev.preventDefault(); actionPeuple(this.actor, ev.currentTarget.dataset.peupleAction); });
+    });
+
+    // ── Magie stellaire ───────────────────────────────────────
+    el.querySelectorAll("[data-sceau]").forEach(btn => {
+      btn.addEventListener("click", ev => { ev.preventDefault(); lancerSceau(this.actor, ev.currentTarget.dataset.sceau); });
+    });
+    el.querySelectorAll("[data-sceau-oublier]").forEach(btn => {
+      btn.addEventListener("click", ev => {
+        ev.preventDefault();
+        const id = ev.currentTarget.dataset.sceauOublier;
+        this.actor.update({ "system.sceaux": (this.actor.system.sceaux ?? []).filter(x => x !== id),
+                            "system.sceauxEpuises": (this.actor.system.sceauxEpuises ?? []).filter(x => x !== id) });
+      });
+    });
+    el.querySelector(".de-sceau-ajouter")?.addEventListener("click", async ev => {
+      ev.preventDefault();
+      apprendreSceau(this.actor, await choisirSceau(this.actor));
+    });
+    el.querySelector(".de-sceau-nuit")?.addEventListener("click", ev => { ev.preventDefault(); nouvelleNuit(this.actor); });
+
     // ── Blessures ──────────────────────────────────────────────
     el.querySelectorAll(".blessure-case").forEach(box => {
       box.addEventListener("click", ev => {
         const idx = parseInt(ev.currentTarget.dataset.idx);
         const current = this.actor.system.blessures?.value ?? 0;
         const newVal = idx < current ? idx : idx + 1;
-        this.actor.update({ "system.blessures.value": Math.clamp(newVal, 0, 10) });
+        this.actor.update({ "system.blessures.value": Math.clamp(newVal, 0, Number(this.actor.system.blessures?.max ?? 10)) });
       });
     });
 
