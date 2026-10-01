@@ -70,7 +70,7 @@ export class DiEActor extends Actor {
 
     const chatData = {
       speaker: ChatMessage.getSpeaker({ actor: this }),
-      content: await renderTemplate("systems/dieux-ennemis-nonofficiel/templates/chat/roll-result.hbs", {
+      content: await foundry.applications.handlebars.renderTemplate("systems/dieux-ennemis-nonofficiel/templates/chat/roll-result.hbs", {
         label,
         nbDes,
         difficulte,
@@ -102,7 +102,7 @@ export class DiEActor extends Actor {
 // ── ITEM ─────────────────────────────────────────────────────
 export class DiEItem extends Item {
   async toChat() {
-    const content = await renderTemplate("systems/dieux-ennemis-nonofficiel/templates/items/item-card.hbs", {
+    const content = await foundry.applications.handlebars.renderTemplate("systems/dieux-ennemis-nonofficiel/templates/items/item-card.hbs", {
       item: this,
       data: this.system
     });

@@ -1,6 +1,6 @@
 # Dieux Ennemis (non officiel) — État
 
-Version : 0.4.0 · id `dieux-ennemis-nonofficiel` · générée automatiquement depuis la version complète
+Version : 0.4.1 · id `dieux-ennemis-nonofficiel` · générée automatiquement depuis la version complète
 (`tools/generer-non-officiel.py` du dépôt privé `magisterphamtom/dieux-ennemis`). **Ne pas modifier à la main :**
 corriger la version complète puis relancer le script.
 

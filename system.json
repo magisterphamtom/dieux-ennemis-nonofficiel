@@ -2,7 +2,7 @@
   "id": "dieux-ennemis-nonofficiel",
   "title": "Dieux Ennemis (non officiel)",
   "description": "Système NON OFFICIEL, créé par un fan, pour jouer à Dieux Ennemis sur Foundry VTT : fiches de héros, de dieux et de PNJ, jets de risque et d'attaque, actions divines. Il ne contient aucun texte, règle détaillée ni illustration des livres : il faut posséder le jeu (Les XII Singes) pour jouer. Non affilié aux XII Singes ni à l'auteur du jeu.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "compatibility": {
     "minimum": "14",
     "verified": "14"
@@ -49,7 +49,7 @@
   "primaryTokenAttribute": "blessures.value",
   "url": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel",
   "manifest": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/releases/latest/download/system.json",
-  "download": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/releases/download/v0.4.0/dieux-ennemis-nonofficiel.zip",
+  "download": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/releases/download/v0.4.1/dieux-ennemis-nonofficiel.zip",
   "bugs": "https://github.com/magisterphamtom/dieux-ennemis-nonofficiel/issues",
   "packs": [
     {

@@ -161,7 +161,8 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     // ── Portrait cliquable (FilePicker) ────────────────────────
     el.querySelector(".de-avatar-wrap")?.addEventListener("click", () => {
       if (!this.isEditable) return;
-      const fp = new FilePicker({
+      const FP = foundry.applications.apps.FilePicker.implementation;
+      const fp = new FP({
         type: "image",
         current: this.actor.img,
         callback: path => this.actor.update({ img: path }),
@@ -360,7 +361,7 @@ export class HerosSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     event.preventDefault();
     let data;
     try {
-      data = TextEditor.getDragEventData(event);
+      data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
     } catch(e) {
       return;
     }
@@ -521,7 +522,7 @@ export class DieuSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     event.preventDefault();
     let data;
     try {
-      data = TextEditor.getDragEventData(event);
+      data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
     } catch(e) {
       return;
     }
